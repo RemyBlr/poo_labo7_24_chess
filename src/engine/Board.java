@@ -10,6 +10,7 @@ public class Board {
     public Board() {
         this.board = new Position[BOARD_SIZE][BOARD_SIZE];
         initializeBoard();
+        setInitialPosition();
     }
 
     public void initializeBoard() {
@@ -23,10 +24,11 @@ public class Board {
     public void setInitialPosition() {
         setPawns();
         setRooks();
+        setBishops();
         setKnights();
-        setPawns();
         setQueens();
         setKings();
+        setEmptySquares();
     }
 
     public void setPawns() {
@@ -65,6 +67,14 @@ public class Board {
     public void setKings() {
         board[4][0].setOccupant(new King(PlayerColor.WHITE));
         board[4][7].setOccupant(new King(PlayerColor.BLACK));
+    }
+
+    public void setEmptySquares() {
+        for(int x = 0; x < BOARD_SIZE; x++) {
+            for(int y = 2; y < 6; y++) {
+                board[x][y].setOccupant(null);
+            }
+        }
     }
 
     public Piece getPiece(int x, int y) {
