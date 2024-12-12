@@ -2,6 +2,7 @@ package engine.piece;
 
 import chess.PieceType;
 import chess.PlayerColor;
+import engine.Board;
 import engine.piece.MovableOncePiece;
 
 public class King extends MovableOncePiece {
@@ -16,7 +17,7 @@ public class King extends MovableOncePiece {
     }
 
     @Override
-    public boolean isValidMove(int fromX, int fromY, int toX, int toY) {
+    public boolean isValidMove(int fromX, int fromY, int toX, int toY, Board board) {
         //samePosition deja pris en charge
         return !(Math.abs(toX - fromX) > 1 || Math.abs(toY - fromY) > 1);
     }
