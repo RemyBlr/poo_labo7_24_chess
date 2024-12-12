@@ -99,6 +99,7 @@ public class Board {
 
             }
         }
+        return null;
     }
 
     public boolean isCheckMate() {
