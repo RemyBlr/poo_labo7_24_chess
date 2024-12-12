@@ -13,4 +13,16 @@ public class Rook extends MovableOncePiece {
     public PieceType type() {
         return PieceType.ROOK;
     }
+
+    public boolean isValidMove(int fromX, int fromY, int toX, int toY) {
+
+        // Cannot go if obstacles
+        for(int i = fromX, j = fromY; i < toX && toY < fromY; ++i, ++j) {
+//            if( != null) {
+//
+//            }
+        }
+
+        return true;
+    }
 }

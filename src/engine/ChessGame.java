@@ -17,9 +17,6 @@ public class ChessGame implements ChessController {
         this.view = view;
         view.startView();
 
-        // Set the pieces on the board
-
-
         view.displayMessage("It's " + currentPlayerColor + "'s turn");
 
 //    while(!isGameOver) {
