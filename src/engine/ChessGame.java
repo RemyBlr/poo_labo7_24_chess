@@ -12,23 +12,13 @@ public class ChessGame implements ChessController {
     private boolean isGameOver;
     private PlayerColor currentPlayerColor;
 
-    public ChessGame() {
-        newGame();
-    }
-
     @Override
     public void start(ChessView view) {
         this.view = view;
         view.startView();
 
         // Set the pieces on the board
-        for(int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++) {
-                if(board.getPiece(i, j) != null) {
-                    view.putPiece(board.getPiece(i, j).type(), board.getPiece(i, j).color(), i, j);
-                }
-            }
-        }
+
 
         view.displayMessage("It's " + currentPlayerColor + "'s turn");
 
@@ -105,9 +95,9 @@ public class ChessGame implements ChessController {
     @Override
     public void newGame() {
         board = new Board();
-        board.setInitialPosition();
         currentPlayerColor = PlayerColor.WHITE;
         isGameOver = false;
+        displayBoard();
     }
 
     public void displayBoard() {

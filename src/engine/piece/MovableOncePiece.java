@@ -7,6 +7,8 @@ import chess.PlayerColor;
  */
 public abstract class MovableOncePiece extends Piece {
 
+    private boolean hasMoved;
+    
     public MovableOncePiece(PlayerColor color) {
         super(color);
     }
