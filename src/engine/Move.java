@@ -1,5 +1,7 @@
 package engine;
 
+import engine.piece.Piece;
+
 public class Move {
     private int fromX;
     private int fromY;

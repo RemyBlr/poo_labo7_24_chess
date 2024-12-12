@@ -3,6 +3,7 @@ package engine;
 import chess.ChessController;
 import chess.ChessView;
 import chess.PlayerColor;
+import engine.piece.Piece;
 
 public class ChessGame implements ChessController {
 

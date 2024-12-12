@@ -1,7 +1,7 @@
 package engine;
 
 import chess.PlayerColor;
-import engine.Piece;
+import engine.piece.*;
 
 public class Board {
     private final int BOARD_SIZE = 8;
