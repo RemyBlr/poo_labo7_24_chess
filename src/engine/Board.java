@@ -90,6 +90,17 @@ public class Board {
         return board[x][y].getOccupant();
     }
 
+    public King getKing(PlayerColor color)
+    {
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            for (int y = 0; y < BOARD_SIZE; y++) {
+                Position cell = board[x][y];
+                if(!cell.isOccupied() || cell.getOccupant().color() != color) continue;
+
+            }
+        }
+    }
+
     public boolean isCheckMate() {
         return false;
     }
