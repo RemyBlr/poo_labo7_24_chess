@@ -77,7 +77,24 @@ public class Board {
         }
     }
 
+    public void removePiece(int x, int y) {
+        board[x][y].setOccupant(null);
+    }
+
+    public void movePiece(int fromX, int fromY, int toX, int toY) {
+        board[toX][toY].setOccupant(board[fromX][fromY].getOccupant());
+        board[fromX][fromY].setOccupant(null);
+    }
+
     public Piece getPiece(int x, int y) {
         return board[x][y].getOccupant();
+    }
+
+    public boolean isCheckMate() {
+        return false;
+    }
+
+    public boolean isStaleMate() {
+        return false;
     }
 }

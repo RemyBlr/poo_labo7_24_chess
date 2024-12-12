@@ -17,9 +17,11 @@ public abstract class Piece {
         return this.getClass().getSimpleName();
     }
 
-    public PlayerColor getColor() {return color;}
+    public PlayerColor color() {return color;}
 
-    public abstract PieceType getType();
+    public abstract PieceType type();
+
+    public boolean isValidMove(int fromX, int fromY, int toX, int toY) { return true; }
 }
 
 class Bishop extends Piece {
@@ -34,7 +36,7 @@ class Bishop extends Piece {
     }
 
     @Override
-    public PieceType getType() {
+    public PieceType type() {
         return PieceType.BISHOP;
     }
 }
@@ -51,7 +53,7 @@ class Knight extends Piece {
     }
 
     @Override
-    public PieceType getType() {
+    public PieceType type() {
         return PieceType.KNIGHT;
     }
 }
@@ -68,7 +70,7 @@ class Queen extends Piece {
     }
 
     @Override
-    public PieceType getType() {
+    public PieceType type() {
         return PieceType.QUEEN;
     }
 }
@@ -95,7 +97,7 @@ class Pawn extends MovableOncePiece {
     }
 
     @Override
-    public PieceType getType() {
+    public PieceType type() {
         return PieceType.PAWN;
     }
 }
@@ -107,7 +109,7 @@ class King extends MovableOncePiece {
     }
 
     @Override
-    public PieceType getType() {
+    public PieceType type() {
         return PieceType.KING;
     }
 }
@@ -119,7 +121,7 @@ class Rook extends MovableOncePiece {
     }
 
     @Override
-    public PieceType getType() {
+    public PieceType type() {
         return PieceType.ROOK;
     }
 }
