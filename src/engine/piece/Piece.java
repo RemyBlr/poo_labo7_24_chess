@@ -3,6 +3,7 @@ package engine.piece;
 import chess.PieceType;
 import chess.PlayerColor;
 import engine.Board;
+import engine.Move;
 
 /*
 ...
@@ -22,6 +23,6 @@ public abstract class Piece {
 
     public abstract PieceType type();
 
-    public boolean isValidMove(int fromX, int fromY, int toX, int toY, Board board) { return true; }
+    public boolean isValidMove(int fromX, int fromY, int toX, int toY, Board board, Move lastMove) { return true; }
 }
 
