@@ -5,8 +5,8 @@ import chess.PlayerColor;
 
 public class Pawn extends MovableOncePiece {
 
-    public Pawn(PlayerColor color) {
-        super(color);
+    public Pawn(PlayerColor color, int x, int y) {
+        super(color,x,y);
     }
 
     @Override
