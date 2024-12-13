@@ -105,9 +105,7 @@ public class Board {
     }
 
     public void movePiece(int fromX, int fromY, int toX, int toY) {
-
         board[fromX][fromY].getOccupant().setXY(toX, toY);
-
         board[toX][toY].setOccupant(board[fromX][fromY].getOccupant());
         board[fromX][fromY].setOccupant(null);
     }
@@ -118,20 +116,6 @@ public class Board {
 
     public HashSet<Piece> getPlayerPieces(PlayerColor color) {
         return color == PlayerColor.WHITE ? whitePieces : blackPieces;
-    }
-
-    public Position getKingPosition(PlayerColor color)
-    {
-        for (int x = 0; x < BOARD_SIZE; x++) {
-            for (int y = 0; y < BOARD_SIZE; y++) {
-                Position cell = board[x][y];
-                if(!cell.isOccupied()) continue;
-                Piece piece = cell.getOccupant();
-                if( piece.color() != color || piece.type() != PieceType.KING) continue;
-                return cell;
-            }
-        }
-        return null;
     }
 
     public boolean isCheckMate() {
