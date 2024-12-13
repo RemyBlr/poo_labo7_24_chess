@@ -118,6 +118,10 @@ public class Board {
         return color == PlayerColor.WHITE ? whitePieces : blackPieces;
     }
 
+    public Position[][] getBoardCells() {
+        return board;
+    }
+
     public boolean isCheckMate() {
         return false;
     }
