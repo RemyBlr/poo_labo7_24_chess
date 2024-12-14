@@ -10,9 +10,8 @@ public abstract class MovableOncePiece extends Piece {
 
     private boolean hasMoved;
 
-    public MovableOncePiece(PlayerColor color) {
-        super(color);
-        hasMoved = false;
+    public MovableOncePiece(PlayerColor color, int x, int y) {
+        super(color,x,y);
     }
 
     public boolean hasMadeFirstMove() {
