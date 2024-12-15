@@ -69,7 +69,7 @@ public class ChessGame implements ChessController {
         }
 
         // Check if the move is valid for the piece type
-        System.out.println("fromX : " + fromX + " fromY : " + fromY + " toX : " + toX + " toY : " + toY + " Type : " + pieceFrom.type());
+        System.out.println("(" + fromX + ", " + fromY + ") -> (" + toX + ", " + toY + ") Type=" + pieceFrom.type());
         if(!pieceFrom.isValidMove(fromX, fromY, toX, toY, board, lastMove)) {
             view.displayMessage(pieceFrom + " can't move to this position");
             return false;

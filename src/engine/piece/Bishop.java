@@ -33,11 +33,12 @@ public class Bishop extends Piece {
 
         // Check if there is a piece on the path the rook wants to go through
         int incrX = 1, incrY = 1; // Déplacement diagonal haut droite
-        if(fromX > toX) incrX = -1;
-        if(fromY > toY) incrY = -1;
+        if(fromX > toX) incrX = -1; // gauche
+        if(fromY > toY) incrY = -1; // bas
 
-        for(int i = fromX, j = fromY; i < toX && toY < fromY; i += incrX, j += incrY) {
-            if(board.getPiece(i, j) != null) {
+        for(int x = fromX + incrX, y = fromY + incrY; x != toX && y != toY; x += incrX, y += incrY) {
+            System.out.println("Is there a piece at " + x + " " + y + " ? " + board.getPiece(x, y));
+            if(board.getPiece(x, y) != null) {
                 return false;
             }
         }
