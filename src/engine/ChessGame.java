@@ -33,6 +33,10 @@ public class ChessGame implements ChessController {
     public boolean move(int fromX, int fromY, int toX, int toY) {
         Piece pieceFrom = board.getPiece(fromX, fromY), pieceTo = board.getPiece(toX, toY);
 
+        if(fromX == toX && fromY == toY) {
+            view.displayMessage("You can't move a piece to the same position");
+        }
+
         if(pieceFrom == null) {
             view.displayMessage("Select one piece to move");
             return false;
@@ -65,6 +69,7 @@ public class ChessGame implements ChessController {
         }
 
         // Check if the move is valid for the piece type
+        System.out.println("fromX : " + fromX + " fromY : " + fromY + " toX : " + toX + " toY : " + toY + " Type : " + pieceFrom.type());
         if(!pieceFrom.isValidMove(fromX, fromY, toX, toY, board, lastMove)) {
             view.displayMessage(pieceFrom + " can't move to this position");
             return false;

@@ -21,11 +21,6 @@ public class Rook extends MovableOncePiece {
     }
 
     public boolean isValidMove(int fromX, int fromY, int toX, int toY, Board board, Move lastMove) {
-
-        if(fromX != toX && fromY != toY) {
-            return false;
-        }
-
         // Cannot go through obstacles
         if(!isDiagonalMove(fromX, fromY, toX, toY)) {
             return false;
