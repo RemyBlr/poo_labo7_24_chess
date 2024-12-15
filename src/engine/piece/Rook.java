@@ -16,6 +16,10 @@ public class Rook extends MovableOncePiece {
         return PieceType.ROOK;
     }
 
+    private boolean isDiagonalMove(int fromX, int fromY, int toX, int toY) {
+        return Math.abs(toX - fromX) == Math.abs(toY - fromY);
+    }
+
     public boolean isValidMove(int fromX, int fromY, int toX, int toY, Board board, Move lastMove) {
 
         if(fromX != toX && fromY != toY) {
@@ -23,27 +27,20 @@ public class Rook extends MovableOncePiece {
         }
 
         // Cannot go through obstacles
-        if(fromX == toX) {
-            int step = fromY < toY ? 1 : -1;
-            for(int i = fromY + step; i != toY; i += step) {
-                if(board.getPiece(fromX, i) != null) {
-                    return false;
-                }
-            }
-        } else {
-            int step = fromX < toX ? 1 : -1;
-            for(int i = fromX + step; i != toX; i += step) {
-                if(board.getPiece(i, fromY) != null) {
-                    return false;
-                }
-            }
+        if(!isDiagonalMove(fromX, fromY, toX, toY)) {
+            return false;
         }
 
-//        for(int i = fromX, j = fromY; i < toX && toY < fromY; ++i, ++j) {
-//            if( != null) {
-//
-//            }
-//        }
+        // Check if there is a piece on the path the rook wants to go through
+        int incrX = 1, incrY = 1; // Déplacement diagonal haut droite
+        if(fromX > toX) incrX = -1;
+        if(fromY > toY) incrY = -1;
+
+        for(int i = fromX, j = fromY; i < toX && toY < fromY; i += incrX, j += incrY) {
+            if(board.getPiece(i, j) != null) {
+                return false;
+            }
+        }
 
         return true;
     }
