@@ -5,8 +5,8 @@ import chess.PlayerColor;
 
 public class Rook extends MovableOncePiece {
 
-    public Rook(PlayerColor color) {
-        super(color);
+    public Rook(PlayerColor color, int x, int y) {
+        super(color,x,y);
     }
 
     @Override

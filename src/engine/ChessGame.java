@@ -2,6 +2,7 @@ package engine;
 
 import chess.ChessController;
 import chess.ChessView;
+import chess.PieceType;
 import chess.PlayerColor;
 import engine.piece.Piece;
 
@@ -11,17 +12,13 @@ public class ChessGame implements ChessController {
     private Board board;
     private boolean isGameOver;
     private PlayerColor currentPlayerColor;
+    private Move lastMove = new Move(-1,-1,-1,-1);
 
     @Override
     public void start(ChessView view) {
         this.view = view;
         view.startView();
-
         view.displayMessage("It's " + currentPlayerColor + "'s turn");
-
-//    while(!isGameOver) {
-//      view.displayMessage("It's " + currentPlayer + "'s turn");
-//    }
     }
 
     /*
@@ -52,24 +49,41 @@ public class ChessGame implements ChessController {
             return false;
         }
 
-        if(pieceFrom != null && pieceTo != null && pieceFrom.color() == pieceTo.color()) {
+        if(pieceTo != null && pieceFrom.color() == pieceTo.color()) {
             view.displayMessage("You can't eat your own piece");
             return false;
         }
 
+        Move move = new Move(fromX, fromY, toX, toY);
+
+        // pawn moves two squares (info for en passant
+        if (pieceFrom.type() ==  PieceType.PAWN) {
+            int direction = (pieceFrom.color() == PlayerColor.WHITE) ? 1 : -1;
+            if (Math.abs(toY - fromY) == 2) {
+                move.setDoublePawnMove(true);
+            }
+        }
+
         // Check if the move is valid for the piece type
-        if(!pieceFrom.isValidMove(fromX, fromY, toX, toY)) {
+        if(!pieceFrom.isValidMove(fromX, fromY, toX, toY, board, lastMove)) {
             view.displayMessage(pieceFrom + " can't move to this position");
             return false;
         }
 
-        if (pieceTo != null) {
+        //System.out.println("en passant ? : " + move.isEnPassant());
+        //System.out.println("last move ? : " + lastMove);
+
+        if(lastMove.isEnPassant()) {
+            int direction = (pieceFrom.color() == PlayerColor.WHITE) ? 1 : -1;
+            board.removePiece(toX, toY - direction);
+            view.removePiece(toX, toY - direction);
+        }
+        else {
             view.removePiece(toX, toY);
             board.removePiece(toX, toY);
         }
 
         board.movePiece(fromX, fromY, toX, toY);
-
         view.removePiece(fromX, fromY);
         view.putPiece(pieceFrom.type(), pieceFrom.color(), toX, toY);
 
@@ -82,6 +96,7 @@ public class ChessGame implements ChessController {
 
         currentPlayerColor = (currentPlayerColor == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
         view.displayMessage("It's " + currentPlayerColor + "'s turn");
+        this.lastMove = move; // save last move for checks
         return true;
     }
 
