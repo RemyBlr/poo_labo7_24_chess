@@ -4,6 +4,7 @@ import chess.ChessController;
 import chess.ChessView;
 import chess.PieceType;
 import chess.PlayerColor;
+import engine.piece.MovableOncePiece;
 import engine.piece.Piece;
 
 public class ChessGame implements ChessController {
@@ -52,6 +53,45 @@ public class ChessGame implements ChessController {
             view.displayMessage("Out of board");
             return false;
         }
+        System.out.println("(" + fromX + ", " + fromY + ") -> (" + toX + ", " + toY + ") Type=" + pieceFrom.type());
+
+        // Roque (petit ou grand)
+//        if(pieceFrom instanceof MovableOncePiece && pieceTo instanceof MovableOncePiece) {
+//            System.out.println("Roque");
+//            System.out.println("Piece from : " + pieceFrom);
+//            System.out.println("Piece to : " + pieceTo);
+//            System.out.println("Has moved ? " + ((MovableOncePiece) pieceFrom).hasMoved());
+//            System.out.println("Has moved ? " + ((MovableOncePiece) pieceTo).hasMoved());
+//        }
+        if (pieceFrom.type() == PieceType.KING && pieceTo.type() == PieceType.ROOK && !((MovableOncePiece) pieceFrom).hasMoved() && !((MovableOncePiece) pieceTo).hasMoved()) {
+            // if(pieceFrom.Color() == Color.WHITE) l'inverse peut-être ?
+            int incrX = -1; // Gauche
+            if (toX > fromX) incrX = 1; // Droite
+            for (int x = fromX + incrX; x != toX; x += incrX) {
+                if (board.getPiece(x, fromY) != null) {
+                    view.displayMessage("You can't roque");
+                    return false;
+                }
+            }
+
+            int newKingX, newRookX;
+            if(toX > fromX) {
+                newKingX = fromX + 2;
+                newRookX = fromX + 1;
+            }
+            else {
+                newKingX = fromX - 2;
+                newRookX = fromX - 1;
+            }
+
+            board.movePiece(fromX, fromY, newKingX, fromY);
+            view.removePiece(fromX, fromY);
+            view.putPiece(pieceFrom.type(), pieceFrom.color(), newKingX, fromY);
+
+            board.movePiece(toX, toY, newRookX, toY);
+            view.removePiece(toX, toY);
+            view.putPiece(pieceTo.type(), pieceTo.color(), newRookX, toY);
+        }
 
         if(pieceTo != null && pieceFrom.color() == pieceTo.color()) {
             view.displayMessage("You can't eat your own piece");
@@ -69,7 +109,6 @@ public class ChessGame implements ChessController {
         }
 
         // Check if the move is valid for the piece type
-        System.out.println("(" + fromX + ", " + fromY + ") -> (" + toX + ", " + toY + ") Type=" + pieceFrom.type());
         if(!pieceFrom.isValidMove(fromX, fromY, toX, toY, board, lastMove)) {
             view.displayMessage(pieceFrom + " can't move to this position");
             return false;

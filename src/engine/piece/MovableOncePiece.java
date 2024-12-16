@@ -22,6 +22,10 @@ public abstract class MovableOncePiece extends Piece {
         hasMoved = state;
     }
 
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+
     @Override
     public String toString() {
         return super.toString();
