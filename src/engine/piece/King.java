@@ -28,10 +28,13 @@ public class King extends MovableOncePiece {
     }
 
     public boolean isChecked(Board board, Move lastMove) {
+        Move move;
         PlayerColor enemyColor = color == PlayerColor.WHITE ? PlayerColor.BLACK : PlayerColor.WHITE;
         HashSet<Piece> enemyPieces = board.getPlayerPieces(enemyColor);
+
         for (Piece enemy : enemyPieces) {
-            if(!enemy.isValidMove(lastMove, board, lastMove)) continue; // Résultat peut-être éronné ici
+            move = new Move(enemy.pos(), this.pos(), enemy, null);
+            if(!enemy.isValidMove(move, board, lastMove)) continue; // Résultat peut-être éronné ici
             return true;
         }
         return false;
