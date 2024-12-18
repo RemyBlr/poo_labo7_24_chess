@@ -24,17 +24,28 @@ public class King extends MovableOncePiece {
     @Override
     public boolean isValidMove(Move move, Board board, Move lastMove) {
         Position from = move.from(), to = move.to();
-        return !(Math.abs(to.x() - from.x()) > 1 || Math.abs(to.y() - from.y()) > 1);
+
+        // Ne peut que se déplacer d'une case
+        if (Math.abs(to.x() - from.x()) > 1 || Math.abs(to.y() - from.y()) > 1) {
+            System.out.println("1 case only for the king.");
+            return false;
+        }
+
+        if(isChecked(board, lastMove)) {
+            System.out.println("Roi en échec !");
+            return false;
+        }
+
+        return true;
     }
 
     public boolean isChecked(Board board, Move lastMove) {
-        Move move;
+        Move checkingKing;
         PlayerColor enemyColor = color == PlayerColor.WHITE ? PlayerColor.BLACK : PlayerColor.WHITE;
         HashSet<Piece> enemyPieces = board.getPlayerPieces(enemyColor);
-
         for (Piece enemy : enemyPieces) {
-            move = new Move(enemy.pos(), this.pos(), enemy, null);
-            if(!enemy.isValidMove(move, board, lastMove)) continue; // Résultat peut-être éronné ici
+            checkingKing = new Move(new Position(enemy.pos().x(), enemy.pos().y()), this.pos, enemy, this);
+            if(!enemy.isValidMove(checkingKing , board, lastMove)) continue;
             return true;
         }
         return false;

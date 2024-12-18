@@ -22,15 +22,18 @@ public class Queen extends Piece {
         return PieceType.QUEEN;
     }
 
-    private boolean isDiagonalMove(Position from, Position to) {
+    private boolean isDiagonalMove(Move move) {
+        Position from = move.from(), to = move.to();
         return Math.abs(to.x() - from.x()) == Math.abs(to.y() - from.y());
     }
 
-    private boolean isStraightMove(Position from, Position to) {
+    private boolean isStraightMove(Move move) {
+        Position from = move.from(), to = move.to();
         return from.x() == to.x() || from.y() == to.y();
     }
 
-    private boolean isClearPath(Position from, Position to, Board board) {
+    private boolean isClearPath(Move move, Board board) {
+        Position from = move.from(), to = move.to();
         int incrX = Integer.compare(to.x(), from.x());
         int incrY = Integer.compare(to.y(), from.y());
 
@@ -44,11 +47,11 @@ public class Queen extends Piece {
     public boolean isValidMove(Move move, Board board, Move lastMove) {
         Position from = move.from(), to = move.to();
 
-        if(!isDiagonalMove(from, to) && !isStraightMove(from, to)) {
+        if(!isDiagonalMove(move) && !isStraightMove(move)) {
             return false;
         }
 
-        if(!isClearPath(from, to, board))
+        if(!isClearPath(move, board))
             return false;
 
         return true;
