@@ -4,11 +4,12 @@ import chess.PieceType;
 import chess.PlayerColor;
 import engine.Board;
 import engine.Move;
+import engine.Position;
 
 public class Bishop extends Piece {
 
-    public Bishop(PlayerColor color, int x, int y) {
-        super(color,x,y);
+    public Bishop(PlayerColor color, Position pos) {
+        super(color, pos);
     }
 
     @Override
@@ -21,24 +22,23 @@ public class Bishop extends Piece {
         return PieceType.BISHOP;
     }
 
-    private boolean isDiagonalMove(int fromX, int fromY, int toX, int toY) {
-        return Math.abs(toX - fromX) == Math.abs(toY - fromY);
+    private boolean isDiagonalMove(Position from, Position to) {
+        return Math.abs(to.x() - from.x()) == Math.abs(to.y() - from.y());
     }
 
-    public boolean isValidMove(int fromX, int fromY, int toX, int toY, Board board, Move lastMove) {
+    public boolean isValidMove(Position from, Position to, Board board, Move lastMove) {
         // Cannot go through obstacles
-        if(!isDiagonalMove(fromX, fromY, toX, toY)) {
+        if (!isDiagonalMove(from, to)) {
             return false;
         }
 
-        // Check if there is a piece on the path the rook wants to go through
-        int incrX = 1, incrY = 1; // Déplacement diagonal haut droite
-        if(fromX > toX) incrX = -1; // gauche
-        if(fromY > toY) incrY = -1; // bas
+        // Check if there is a piece on the path the bishop wants to go through
+        int incrX = 1, incrY = 1; // Diagonal move up-right
+        if (from.x() > to.x()) incrX = -1; // left
+        if (from.y() > to.y()) incrY = -1; // down
 
-        for(int x = fromX + incrX, y = fromY + incrY; x != toX && y != toY; x += incrX, y += incrY) {
-            System.out.println("Is there a piece at " + x + " " + y + " ? " + board.getPiece(x, y));
-            if(board.getPiece(x, y) != null) {
+        for (int x = from.x() + incrX, y = from.y() + incrY; x != to.x() && y != to.y(); x += incrX, y += incrY) {
+            if (board.getPiece(new Position(x, y)) != null) {
                 return false;
             }
         }

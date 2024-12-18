@@ -12,8 +12,8 @@ import java.util.HashSet;
 
 public class King extends MovableOncePiece {
 
-    public King(PlayerColor color, int x, int y) {
-        super(color,x,y);
+    public King(PlayerColor color, Position pos) {
+        super(color, pos);
     }
 
     @Override
@@ -22,16 +22,16 @@ public class King extends MovableOncePiece {
     }
 
     @Override
-    public boolean isValidMove(int fromX, int fromY, int toX, int toY, Board board, Move lastMove) {
+    public boolean isValidMove(Position from, Position to, Board board, Move lastMove) {
         //samePosition deja pris en charge
-        return !(Math.abs(toX - fromX) > 1 || Math.abs(toY - fromY) > 1);
+        return !(Math.abs(to.x() - from.x()) > 1 || Math.abs(to.y() - from.y()) > 1);
     }
 
     public boolean isChecked(Board board, Move lastMove) {
         PlayerColor enemyColor = color == PlayerColor.WHITE ? PlayerColor.BLACK : PlayerColor.WHITE;
         HashSet<Piece> enemyPieces = board.getPlayerPieces(enemyColor);
         for (Piece enemy : enemyPieces) {
-            if(!enemy.isValidMove(enemy.x, enemy.y, x, y, board, lastMove)) continue;
+            if(!enemy.isValidMove(enemy.pos, pos, board, lastMove)) continue;
             return true;
         }
         return false;

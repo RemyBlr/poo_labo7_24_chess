@@ -4,11 +4,12 @@ import chess.PieceType;
 import chess.PlayerColor;
 import engine.Board;
 import engine.Move;
+import engine.Position;
 
 public class Rook extends MovableOncePiece {
 
-    public Rook(PlayerColor color, int x, int y) {
-        super(color,x,y);
+    public Rook(PlayerColor color, Position pos) {
+        super(color,pos);
     }
 
     @Override
@@ -16,20 +17,20 @@ public class Rook extends MovableOncePiece {
         return PieceType.ROOK;
     }
 
-    private boolean isStraightMove(int fromX, int fromY, int toX, int toY) {
-        return fromX == toX || fromY == toY;
+    private boolean isStraightMove(Position from, Position to) {
+        return from.x() == to.x() || from.y() == to.y();
     }
 
-    public boolean isValidMove(int fromX, int fromY, int toX, int toY, Board board, Move lastMove) {
+    public boolean isValidMove(Position from, Position to, Board board, Move lastMove) {
         // Cannot go through obstacles
-        if(!isStraightMove(fromX, fromY, toX, toY)) return false;
+        if(!isStraightMove(from, to)) return false;
 
         // Check if there is a piece on the path the rook wants to go through
-        int incrX = Integer.compare(toX, fromX);
-        int incrY = Integer.compare(toY, fromY);
+        int incrX = Integer.compare(to.x(), from.x());
+        int incrY = Integer.compare(to.y(), from.y());
 
-        for (int x = fromX + incrX, y = fromY + incrY; x != toX || y != toY; x += incrX, y += incrY) {
-            if (board.getPiece(x, y) != null) return false;
+        for (int x = from.x() + incrX, y = from.y() + incrY; x != to.x() || y != to.y(); x += incrX, y += incrY) {
+            if (board.getPiece(new Position(x, y)) != null) return false;
         }
         return true;
     }

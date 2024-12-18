@@ -4,27 +4,25 @@ import chess.PieceType;
 import chess.PlayerColor;
 import engine.Board;
 import engine.Move;
+import engine.Position;
 
 /*
 ...
  */
 public abstract class Piece {
     PlayerColor color;
+    Position pos;
 
-    int x;
-    int y;
-
-    public Piece(PlayerColor color, int x, int y) {
+    public Piece(PlayerColor color, Position pos) {
         this.color = color;
-        this.x = x;
-        this.y = y;
+        this.pos = pos;
     }
 
-    public int getX() {return x;};
-    public int getY() {return y;}
+    public int x() {return pos.x();};
+    public int y() {return pos.y();}
 
-    public void setX(int x) {this.x = x;};
-    public void setY(int y) {this.y = y;};
+    public void setX(int x) {pos.setX(x);};
+    public void setY(int y) {pos.setY(y);};
     public void setXY(int x, int y) {setX(x); setY(y);};
 
     public String toString() {
@@ -35,6 +33,6 @@ public abstract class Piece {
 
     public abstract PieceType type();
 
-    public boolean isValidMove(int fromX, int fromY, int toX, int toY, Board board, Move lastMove) { return true; }
+    public abstract boolean isValidMove(Position from, Position to, Board board, Move lastMove);
 }
 

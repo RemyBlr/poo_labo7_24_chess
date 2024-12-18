@@ -13,11 +13,11 @@ public class Position {
         this.piece = null;
     }
 
-    public int getX() {
+    public int x() {
         return x;
     }
 
-    public int getY() {
+    public int y() {
         return y;
     }
 
@@ -31,5 +31,13 @@ public class Position {
 
     public void setOccupant(Piece piece) {
         this.piece = piece;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }

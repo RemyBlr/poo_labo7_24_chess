@@ -32,9 +32,10 @@ public class ChessGame implements ChessController {
      */
     @Override
     public boolean move(int fromX, int fromY, int toX, int toY) {
-        Piece pieceFrom = board.getPiece(fromX, fromY), pieceTo = board.getPiece(toX, toY);
+        Position from = new Position(fromX, fromY), to = new Position(toX, toY);
+        Piece pieceFrom = board.getPiece(from), pieceTo = board.getPiece(to);
 
-        if(fromX == toX && fromY == toY) {
+        if(from.x() == to.x() && from.y() == to.y()) {
             view.displayMessage("You can't move a piece to the same position");
         }
 
@@ -49,7 +50,7 @@ public class ChessGame implements ChessController {
             return false;
         }
 
-        if(fromX < 0 || fromX >= 8 || fromY < 0 || fromY >= 8 || toX < 0 || toX >= 8 || toY < 0 || toY >= 8) {
+        if(from.x() < 0 || from.x() >= 8 || from.y() < 0 || from.y() >= 8 || to.x() < 0 || to.x() >= 8 || to.y() < 0 || to.y() >= 8) {
             view.displayMessage("Out of board");
             return false;
         }
@@ -63,12 +64,12 @@ public class ChessGame implements ChessController {
 //            System.out.println("Has moved ? " + ((MovableOncePiece) pieceFrom).hasMoved());
 //            System.out.println("Has moved ? " + ((MovableOncePiece) pieceTo).hasMoved());
 //        }
-        if (pieceFrom.type() == PieceType.KING && pieceTo.type() == PieceType.ROOK && !((MovableOncePiece) pieceFrom).hasMoved() && !((MovableOncePiece) pieceTo).hasMoved()) {
+        if (pieceFrom.type() == PieceType.KING && pieceTo != null && pieceTo.type() == PieceType.ROOK && !((MovableOncePiece) pieceFrom).hasMoved() && !((MovableOncePiece) pieceTo).hasMoved()) {
             // if(pieceFrom.Color() == Color.WHITE) l'inverse peut-être ?
             int incrX = -1; // Gauche
             if (toX > fromX) incrX = 1; // Droite
             for (int x = fromX + incrX; x != toX; x += incrX) {
-                if (board.getPiece(x, fromY) != null) {
+                if (board.getPiece(new Position(x, fromY)) != null) {
                     view.displayMessage("You can't roque");
                     return false;
                 }
@@ -109,7 +110,7 @@ public class ChessGame implements ChessController {
         }
 
         // Check if the move is valid for the piece type
-        if(!pieceFrom.isValidMove(fromX, fromY, toX, toY, board, lastMove)) {
+        if(!pieceFrom.isValidMove(from, to, board, lastMove)) {
             view.displayMessage(pieceFrom + " can't move to this position");
             return false;
         }
@@ -159,7 +160,7 @@ public class ChessGame implements ChessController {
     public void displayBoard() {
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
-                Piece piece = board.getPiece(x, y);
+                Piece piece = board.getPiece(new Position(x, y));
                 if (piece != null) {
                     view.putPiece(piece.type(), piece.color(), x, y);
                 }
