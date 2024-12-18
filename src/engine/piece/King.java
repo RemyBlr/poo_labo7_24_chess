@@ -27,12 +27,18 @@ public class King extends MovableOncePiece {
 
         // Ne peut que se déplacer d'une case
         if (Math.abs(to.x() - from.x()) > 1 || Math.abs(to.y() - from.y()) > 1) {
-            System.out.println("1 case only for the king.");
+            System.out.println("1 case only for the king."); // Pourquoi on rentre ici même si le roi avance de 1 ?
             return false;
         }
 
-        if(isChecked(board, lastMove)) {
-            System.out.println("Roi en échec !");
+        // Simuler le déplacement pour vérifier si le roi est en échec
+        Piece pieceTo = board.getPiece(to);
+        board.movePiece(move);
+        boolean isChecked = isChecked(board, lastMove);
+        board.movePiece(new Move(to, from, pieceTo, null)); // Annuler le déplacement
+
+        if (isChecked) {
+            System.out.println("King is checked.");
             return false;
         }
 
@@ -40,13 +46,14 @@ public class King extends MovableOncePiece {
     }
 
     public boolean isChecked(Board board, Move lastMove) {
-        Move checkingKing;
-        PlayerColor enemyColor = color == PlayerColor.WHITE ? PlayerColor.BLACK : PlayerColor.WHITE;
+        Move hypotheticalMove;
+        PlayerColor enemyColor = color.equals(PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
         HashSet<Piece> enemyPieces = board.getPlayerPieces(enemyColor);
         for (Piece enemy : enemyPieces) {
-            checkingKing = new Move(new Position(enemy.pos().x(), enemy.pos().y()), this.pos, enemy, this);
-            if(!enemy.isValidMove(checkingKing , board, lastMove)) continue;
-            return true;
+            hypotheticalMove = new Move(new Position(enemy.pos().x(), enemy.pos().y()), this.pos, enemy, this);
+            if (enemy.isValidMove(hypotheticalMove, board, lastMove)) {
+                return true;
+            }
         }
         return false;
     }

@@ -103,6 +103,8 @@ public class Board {
     }
 
     public void movePiece(Move move) {
+        if(move == null) return;
+
         Position from = move.from(), to = move.to();
         board[from.x()][from.y()].getOccupant().setXY(to.x(), to.y());
         board[to.x()][to.y()].setOccupant(board[from.x()][from.y()].getOccupant());

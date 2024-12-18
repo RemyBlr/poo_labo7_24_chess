@@ -44,4 +44,8 @@ public class Position {
     public boolean isInsideBoard() {
         return x >= 0 && x < 8 && y >= 0 && y < 8;
     }
+
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
 }
