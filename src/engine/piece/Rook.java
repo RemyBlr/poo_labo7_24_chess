@@ -17,19 +17,19 @@ public class Rook extends MovableOncePiece {
         return PieceType.ROOK;
     }
 
-    private boolean isStraightMove(Position from, Position to) {
-        return from.x() == to.x() || from.y() == to.y();
+    private boolean isStraightMove(Move move) {
+        return move.from().x() == move.to().x() || move.from().y() == move.to().y();
     }
 
-    public boolean isValidMove(Position from, Position to, Board board, Move lastMove) {
+    public boolean isValidMove(Move move, Board board, Move lastMove) {
         // Cannot go through obstacles
-        if(!isStraightMove(from, to)) return false;
+        if(!isStraightMove(move)) return false;
 
         // Check if there is a piece on the path the rook wants to go through
-        int incrX = Integer.compare(to.x(), from.x());
-        int incrY = Integer.compare(to.y(), from.y());
+        int incrX = Integer.compare(move.to().x(), move.from().x());
+        int incrY = Integer.compare(move.to().y(), move.from().y());
 
-        for (int x = from.x() + incrX, y = from.y() + incrY; x != to.x() || y != to.y(); x += incrX, y += incrY) {
+        for (int x = move.from().x() + incrX, y = move.from().y() + incrY; x != move.to().x() || y != move.to().y(); x += incrX, y += incrY) {
             if (board.getPiece(new Position(x, y)) != null) return false;
         }
         return true;

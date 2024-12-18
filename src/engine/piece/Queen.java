@@ -41,7 +41,8 @@ public class Queen extends Piece {
         return true;
     }
 
-    public boolean isValidMove(Position from, Position to, Board board, Move lastMove) {
+    public boolean isValidMove(Move move, Board board, Move lastMove) {
+        Position from = move.from(), to = move.to();
 
         if(!isDiagonalMove(from, to) && !isStraightMove(from, to)) {
             return false;

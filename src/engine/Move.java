@@ -1,23 +1,25 @@
 package engine;
 
+import chess.PieceType;
+import chess.PlayerColor;
+import engine.piece.MovableOncePiece;
 import engine.piece.Piece;
 
 public class Move {
-    private int fromX;
-    private int fromY;
-    private int toX;
-    private int toY;
+    private Position from, to;
+    private Piece pieceFrom, pieceTo;
+
     private boolean isCastling;
     private boolean isEnPassant;
     private boolean isPromotion;
     private boolean doublePawnMove;
-    private Piece capturedPiece;
+    private Piece capturedPiece; // Some unused attributes...
 
-    public Move(int fromX, int fromY, int toX, int toY) {
-        this.fromX = fromX;
-        this.fromY = fromY;
-        this.toX = toX;
-        this.toY = toY;
+    public Move(Position from, Position to, Piece pieceFrom, Piece pieceTo) {
+        this.from = from;
+        this.to = to;
+        this.pieceFrom = pieceFrom;
+        this.pieceTo = pieceTo;
         this.isCastling = false;
         this.isEnPassant = false;
         this.isPromotion = false;
@@ -25,20 +27,12 @@ public class Move {
         this.capturedPiece = null;
     }
 
-    public int getFromX() {
-        return fromX;
+    public Position from() {
+        return from;
     }
 
-    public int getFromY() {
-        return fromY;
-    }
-
-    public int getToX() {
-        return toX;
-    }
-
-    public int getToY() {
-        return toY;
+    public Position to() {
+        return to;
     }
 
     public boolean isEnPassant() {
@@ -57,10 +51,44 @@ public class Move {
         this.doublePawnMove = doublePawnMove;
     }
 
+    // Move validation
+    public boolean samePosition() {
+        return from.equals(to);
+    }
+
+    public boolean pieceSelected() {
+        return pieceFrom != null;
+    }
+
+    public boolean isInsideBoard() {
+        return from.isInsideBoard() && to.isInsideBoard();
+    }
+
+    public boolean isPlayerTurn(PlayerColor currentPlayerColor) {
+        return pieceFrom.color().equals(currentPlayerColor);
+    }
+
+    public boolean isRoque() {
+        return pieceFrom.type() == PieceType.KING && pieceTo != null && pieceTo.type() == PieceType.ROOK && !((MovableOncePiece) pieceFrom).hasMoved() && !((MovableOncePiece) pieceTo).hasMoved();
+    }
+
+    public boolean isSameColor() {
+        if(pieceTo == null) return false;
+        return pieceFrom.color().equals(pieceTo.color());
+    }
+
+    public boolean isValidMove(Board board, Move lastMove) {
+        return pieceFrom.isValidMove(this, board, lastMove);
+    }
+
+    public boolean isFinish(Board board) {
+        return board.isCheckMate() || board.isStaleMate();
+    }
+
     public String toString() {
-        return "fromX : " + getFromX() +
-                " fromY : " + getFromY() +
-                " toX : " + getToX() +
-                " toY : " + getToY();
+        return "fromX : " + from.x() +
+                " fromY : " + from.y() +
+                " toX : " + to.x() +
+                " toY : " + to.y();
     }
 }

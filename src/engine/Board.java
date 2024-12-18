@@ -42,7 +42,7 @@ public class Board {
         } else {
             blackPieces.add(piece);
         }
-        board[piece.x()][piece.y()].setOccupant(piece);
+        board[piece.pos().x()][piece.pos().y()].setOccupant(piece);
     }
 
     public void setPawns() {
@@ -91,21 +91,22 @@ public class Board {
         }
     }
 
-    public void removePiece(int x, int y) {
-        Piece piece = board[x][y].getOccupant();
+    public void removePiece(Position pos) {
+        Piece piece = board[pos.x()][pos.y()].getOccupant();
         if(piece == null) return;
         if(piece.color() == PlayerColor.WHITE) {
             whitePieces.remove(piece);
         } else {
             blackPieces.remove(piece);
         }
-        board[x][y].setOccupant(null);
+        board[pos.x()][pos.y()].setOccupant(null);
     }
 
-    public void movePiece(int fromX, int fromY, int toX, int toY) {
-        board[fromX][fromY].getOccupant().setXY(toX, toY);
-        board[toX][toY].setOccupant(board[fromX][fromY].getOccupant());
-        board[fromX][fromY].setOccupant(null);
+    public void movePiece(Move move) {
+        Position from = move.from(), to = move.to();
+        board[from.x()][from.y()].getOccupant().setXY(to.x(), to.y());
+        board[to.x()][to.y()].setOccupant(board[from.x()][from.y()].getOccupant());
+        board[from.x()][from.y()].setOccupant(null);
     }
 
     public Piece getPiece(Position pos) {

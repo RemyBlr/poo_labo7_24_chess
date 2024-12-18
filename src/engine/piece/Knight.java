@@ -23,13 +23,13 @@ public class Knight extends Piece {
     }
 
     // Check if the move is a L move
-    private boolean isLMove(Position from, Position to) {
-        return (Math.abs(to.x() - from.x()) == 2 && Math.abs(to.y() - from.y()) == 1) || (Math.abs(to.x() - from.x()) == 1 && Math.abs(to.y() - from.y()) == 2);
+    private boolean isLMove(Move move) {
+        return (Math.abs(move.to().x() - move.from().x()) == 2 && Math.abs(move.to().y() - move.from().y()) == 1) || (Math.abs(move.to().x() - move.from().x()) == 1 && Math.abs(move.to().y() - move.from().y()) == 2);
     }
 
     @Override
-    public boolean isValidMove(Position from, Position to, Board board, Move lastMove) {
-        if(!isLMove(from, to)) {
+    public boolean isValidMove(Move move, Board board, Move lastMove) {
+        if(!isLMove(move)) {
             return false;
         }
         return true;

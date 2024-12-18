@@ -13,7 +13,7 @@ public class ChessGame implements ChessController {
     private Board board;
     private boolean isGameOver;
     private PlayerColor currentPlayerColor;
-    private Move lastMove = new Move(-1,-1,-1,-1);
+    private Move lastMove = new Move(new Position(-1,-1), new Position(-1,-1), null, null);
 
     @Override
     public void start(ChessView view) {
@@ -34,37 +34,32 @@ public class ChessGame implements ChessController {
     public boolean move(int fromX, int fromY, int toX, int toY) {
         Position from = new Position(fromX, fromY), to = new Position(toX, toY);
         Piece pieceFrom = board.getPiece(from), pieceTo = board.getPiece(to);
+        Move move = new Move(from, to, pieceFrom, pieceTo);
 
-        if(from.x() == to.x() && from.y() == to.y()) {
+        if(!move.samePosition()) {
             view.displayMessage("You can't move a piece to the same position");
         }
 
-        if(pieceFrom == null) {
+        if(!move.pieceSelected()) {
             view.displayMessage("Select one piece to move");
             return false;
         }
 
         // Check if the piece is the current player's piece
-        if(pieceFrom.color() != currentPlayerColor) {
+        if(!move.isPlayerTurn(currentPlayerColor)) {
             view.displayMessage("It's not your turn");
             return false;
         }
 
-        if(from.x() < 0 || from.x() >= 8 || from.y() < 0 || from.y() >= 8 || to.x() < 0 || to.x() >= 8 || to.y() < 0 || to.y() >= 8) {
+        if(!move.isInsideBoard()) {
             view.displayMessage("Out of board");
             return false;
         }
+
         System.out.println("(" + fromX + ", " + fromY + ") -> (" + toX + ", " + toY + ") Type=" + pieceFrom.type());
 
         // Roque (petit ou grand)
-//        if(pieceFrom instanceof MovableOncePiece && pieceTo instanceof MovableOncePiece) {
-//            System.out.println("Roque");
-//            System.out.println("Piece from : " + pieceFrom);
-//            System.out.println("Piece to : " + pieceTo);
-//            System.out.println("Has moved ? " + ((MovableOncePiece) pieceFrom).hasMoved());
-//            System.out.println("Has moved ? " + ((MovableOncePiece) pieceTo).hasMoved());
-//        }
-        if (pieceFrom.type() == PieceType.KING && pieceTo != null && pieceTo.type() == PieceType.ROOK && !((MovableOncePiece) pieceFrom).hasMoved() && !((MovableOncePiece) pieceTo).hasMoved()) {
+        if (move.isRoque()) {
             // if(pieceFrom.Color() == Color.WHITE) l'inverse peut-être ?
             int incrX = -1; // Gauche
             if (toX > fromX) incrX = 1; // Droite
@@ -85,21 +80,22 @@ public class ChessGame implements ChessController {
                 newRookX = fromX - 1;
             }
 
-            board.movePiece(fromX, fromY, newKingX, fromY);
-            view.removePiece(fromX, fromY);
+            Move roqueMove = new Move(from, new Position(newKingX, fromY), pieceFrom, pieceTo);
+
+            board.movePiece(roqueMove);
+            view.removePiece(from.x(), from.y());
             view.putPiece(pieceFrom.type(), pieceFrom.color(), newKingX, fromY);
 
-            board.movePiece(toX, toY, newRookX, toY);
+            Move rookMove = new Move(new Position(fromX, fromY), new Position(newRookX, fromY), pieceFrom, pieceTo);
+            board.movePiece(rookMove);
             view.removePiece(toX, toY);
             view.putPiece(pieceTo.type(), pieceTo.color(), newRookX, toY);
         }
 
-        if(pieceTo != null && pieceFrom.color() == pieceTo.color()) {
+        if(move.isSameColor()) {
             view.displayMessage("You can't eat your own piece");
             return false;
         }
-
-        Move move = new Move(fromX, fromY, toX, toY);
 
         // pawn moves two squares (info for en passant
         if (pieceFrom.type() ==  PieceType.PAWN) {
@@ -110,29 +106,26 @@ public class ChessGame implements ChessController {
         }
 
         // Check if the move is valid for the piece type
-        if(!pieceFrom.isValidMove(from, to, board, lastMove)) {
+        if(!move.isValidMove(board, lastMove)) {
             view.displayMessage(pieceFrom + " can't move to this position");
             return false;
         }
 
-        //System.out.println("en passant ? : " + move.isEnPassant());
-        //System.out.println("last move ? : " + lastMove);
-
         if(lastMove.isEnPassant()) {
             int direction = (pieceFrom.color() == PlayerColor.WHITE) ? 1 : -1;
-            board.removePiece(toX, toY - direction);
-            view.removePiece(toX, toY - direction);
+            board.removePiece(new Position(toX, toY - direction));
+            view.removePiece(to.x(), to.y() - direction);
         }
         else {
             view.removePiece(toX, toY);
-            board.removePiece(toX, toY);
+            board.removePiece(to);
         }
 
-        board.movePiece(fromX, fromY, toX, toY);
+        board.movePiece(move);
         view.removePiece(fromX, fromY);
         view.putPiece(pieceFrom.type(), pieceFrom.color(), toX, toY);
 
-        if (board.isCheckMate() || board.isStaleMate()) {
+        if (move.isFinish(board)) {
             isGameOver = true;
             view.displayMessage("Game over");
             newGame();

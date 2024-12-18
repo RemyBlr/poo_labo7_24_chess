@@ -22,8 +22,8 @@ public class King extends MovableOncePiece {
     }
 
     @Override
-    public boolean isValidMove(Position from, Position to, Board board, Move lastMove) {
-        //samePosition deja pris en charge
+    public boolean isValidMove(Move move, Board board, Move lastMove) {
+        Position from = move.from(), to = move.to();
         return !(Math.abs(to.x() - from.x()) > 1 || Math.abs(to.y() - from.y()) > 1);
     }
 
@@ -31,7 +31,7 @@ public class King extends MovableOncePiece {
         PlayerColor enemyColor = color == PlayerColor.WHITE ? PlayerColor.BLACK : PlayerColor.WHITE;
         HashSet<Piece> enemyPieces = board.getPlayerPieces(enemyColor);
         for (Piece enemy : enemyPieces) {
-            if(!enemy.isValidMove(enemy.pos, pos, board, lastMove)) continue;
+            if(!enemy.isValidMove(lastMove, board, lastMove)) continue; // Résultat peut-être éronné ici
             return true;
         }
         return false;
