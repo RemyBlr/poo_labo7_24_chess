@@ -97,11 +97,23 @@ public class ChessGame implements ChessController {
 
         // Roque
         if (pieceFrom.type() == PieceType.KING && ((King) pieceFrom).isRoquable(move, board)) {
+            // Mettre à jour le roi
             board.movePiece(move);
             view.removePiece(fromX, fromY);
-            view.putPiece(pieceFrom.type(), pieceFrom.color(), to.x(), to.y());
-            view.removePiece(toX, toY);
-            view.putPiece(PieceType.ROOK, pieceFrom.color(), to.x() + 1, to.y());
+            view.putPiece(PieceType.KING, pieceFrom.color(), to.x(), to.y());
+
+            // Mettre à jour la tour
+            boolean small = to.x() - fromX == 2;
+            if(small) {
+                board.movePiece(new Move(new Position(7, fromY), new Position(5, fromY)));
+                view.removePiece(7, fromY);
+                view.putPiece(PieceType.ROOK, pieceFrom.color(), 5, fromY);
+            } else {
+                board.movePiece(new Move(new Position(0, fromY), new Position(3, fromY)));
+                view.removePiece(0, fromY);
+                view.putPiece(PieceType.ROOK, pieceFrom.color(), 3, fromY);
+            }
+
         } else { // Normal move
             board.movePiece(move);
             view.removePiece(fromX, fromY);
