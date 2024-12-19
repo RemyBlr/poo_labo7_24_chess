@@ -20,10 +20,6 @@ public abstract class Piece {
 
     public Position pos() { return this.pos; }
 
-    public void setX(int x) { pos.setX(x); };
-    public void setY(int y) { pos.setY(y); };
-    public void setXY(int x, int y) {setX(x); setY(y);};
-
     public String toString() {
         return this.getClass().getSimpleName();
     }
@@ -33,5 +29,8 @@ public abstract class Piece {
     public abstract PieceType type();
 
     public abstract boolean isValidMove(Move move, Board board, Move lastMove);
-}
 
+    public void setPos(Position to) {
+        this.pos = to;
+    }
+}
