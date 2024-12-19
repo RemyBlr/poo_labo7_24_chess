@@ -1,5 +1,6 @@
 package engine.piece;
 
+import chess.ChessView;
 import chess.PieceType;
 import chess.PlayerColor;
 import engine.Board;
@@ -21,19 +22,19 @@ public class King extends MovableOncePiece {
     public boolean isValidMove(Move move, Board board, Move lastMove) {
         Position from = move.from(), to = move.to();
 
-        // Ne peut pas se mettre en échec
+        // Ne peut pas se mettre en échec tout seul
         if (isChecked(board, lastMove)) {
             System.out.println("King is checked.");
             return false;
         }
 
         // Roque (petit ou grand)
-        if(isRoquable(board, move)) {
+        if(isRoquable(move, board)) {
             System.out.println("Roque");
             return true;
         }
 
-        // Ne peut se déplacer que d'une case
+        // Ne peut se déplacer que d'une case ou tenter un roque
         if (Math.abs(to.x() - from.x()) > 1 || Math.abs(to.y() - from.y()) > 1) {
             System.out.println("1 case only for the king."); // Pourquoi on rentre ici même si le roi avance de 1 ?
             return false;
@@ -59,42 +60,23 @@ public class King extends MovableOncePiece {
     }
 
     // TODO
-    public boolean isRoquable(Board board, Move move) {
-        Piece pieceTo = board.getPiece(move.to());
+    public boolean isRoquable(Move move, Board board) {
+        Position from = move.from(), to = move.to();
+        boolean small = to.x() - from.x() == 2;
 
-        if (pieceTo != null && pieceTo.type() == PieceType.ROOK
-                && !this.hasMoved()
-                && !((Rook) pieceTo).hasMoved()) {
-            int incrX = -1; // Gauche
-            if (pieceTo.pos().x() > this.pos().x()) incrX = 1; // Droite
-
-            for (int x = this.pos().x() + incrX; x != pieceTo.pos().x(); x += incrX) {
-                if (board.getPiece(new Position(x, this.pos().y())) != null) {
-                    //view.displayMessage("You can't roque");
-                    return false;
+        if (!this.hasMoved() && Math.abs(to.x() - from.x()) == 2 && from.y() == to.y()) {
+            // Petit roque
+            if (small) {
+                Piece rook = board.getPiece(new Position(7, from.y()));
+                if (rook != null && rook instanceof Rook r && !r.hasMoved()) {
+                    return true;
+                }
+            } else { // Grand roque
+                Piece rook = board.getPiece(new Position(0, from.y()));
+                if (rook != null && rook instanceof Rook r && !r.hasMoved()) {
+                    return true;
                 }
             }
-
-            int newKingX, newRookX;
-            if(pieceTo.pos().x() > this.pos().x()) {
-                newKingX = this.pos().x() + 2;
-                newRookX = this.pos().x() + 1;
-            }
-            else {
-                newKingX = this.pos().x() - 2;
-                newRookX = this.pos().x() - 1;
-            }
-
-            Move roqueMove = new Move(this.pos, new Position(newKingX, this.pos().y()));
-
-            board.movePiece(roqueMove);
-            //view.removePiece(from.x(), from.y());
-            //view.putPiece(pieceFrom.type(), pieceFrom.color(), newKingX, this.pos().y());
-
-            Move rookMove = new Move(new Position(this.pos().x(), this.pos().y()), new Position(newRookX, this.pos().y()));
-            board.movePiece(rookMove);
-            //view.removePiece(pieceTo.pos().x(), pieceTo.pos().y());
-            //view.putPiece(pieceTo.type(), pieceTo.color(), newRookX, pieceTo.pos().y());
         }
 
         return false;

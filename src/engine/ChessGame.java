@@ -4,6 +4,7 @@ import chess.ChessController;
 import chess.ChessView;
 import chess.PieceType;
 import chess.PlayerColor;
+import engine.piece.King;
 import engine.piece.MovableOncePiece;
 import engine.piece.Piece;
 
@@ -86,15 +87,25 @@ public class ChessGame implements ChessController {
             board.removePiece(to);
         }
         */
-        board.movePiece(move);
-        view.removePiece(fromX, fromY);
-        view.putPiece(pieceFrom.type(), pieceFrom.color(), to.x(), to.y());
 
         if (board.isCheckMate() || board.isStaleMate()) {
             isGameOver = true;
             view.displayMessage("Game over");
             newGame();
             return false;
+        }
+
+        // Roque
+        if (pieceFrom.type() == PieceType.KING && ((King) pieceFrom).isRoquable(move, board)) {
+            Position rookPos = new Position((from.x() + to.x()) / 2, from.y());
+            Position rookDest = new Position((from.x() + to.x()) / 2 + 1, from.y());
+            Piece rook = board.getPiece(rookPos);
+            board.movePiece(new Move(rookPos, rookDest));
+            view.removePiece(rookPos.x(), rookPos.y());
+        } else { // Normal move
+            board.movePiece(move);
+            view.removePiece(fromX, fromY);
+            view.putPiece(pieceFrom.type(), pieceFrom.color(), to.x(), to.y());
         }
 
         currentPlayerColor = (currentPlayerColor == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
