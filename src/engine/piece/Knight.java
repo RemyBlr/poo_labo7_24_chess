@@ -4,11 +4,12 @@ import chess.PieceType;
 import chess.PlayerColor;
 import engine.Board;
 import engine.Move;
+import engine.Position;
 
 public class Knight extends Piece {
 
-    public Knight(PlayerColor color, int x, int y) {
-        super(color,x,y);
+    public Knight(PlayerColor color, Position pos) {
+        super(color, pos);
     }
 
     @Override
@@ -22,12 +23,13 @@ public class Knight extends Piece {
     }
 
     // Check if the move is a L move
-    private boolean isLMove(int fromX, int fromY, int toX, int toY) {
-        return (Math.abs(toX - fromX) == 2 && Math.abs(toY - fromY) == 1) || (Math.abs(toX - fromX) == 1 && Math.abs(toY - fromY) == 2);
+    private boolean isLMove(Move move) {
+        return (Math.abs(move.to().x() - move.from().x()) == 2 && Math.abs(move.to().y() - move.from().y()) == 1) || (Math.abs(move.to().x() - move.from().x()) == 1 && Math.abs(move.to().y() - move.from().y()) == 2);
     }
 
-    public boolean isValidMove(int fromX, int fromY, int toX, int toY, Board board, Move lastMove) {
-        if(!isLMove(fromX, fromY, toX, toY)) {
+    @Override
+    public boolean isValidMove(Move move, Board board, Move lastMove) {
+        if(!isLMove(move)) {
             return false;
         }
         return true;

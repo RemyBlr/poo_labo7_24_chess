@@ -1,10 +1,8 @@
 package engine;
 
-import chess.PieceType;
 import chess.PlayerColor;
 import engine.piece.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Board {
@@ -44,45 +42,45 @@ public class Board {
         } else {
             blackPieces.add(piece);
         }
-        board[piece.getX()][piece.getY()].setOccupant(piece);
+        board[piece.pos().x()][piece.pos().y()].setOccupant(piece);
     }
 
     public void setPawns() {
         for(int x = 0; x < BOARD_SIZE; x++) {
-            addPiece(new Pawn(PlayerColor.WHITE, x,1));
-            addPiece(new Pawn(PlayerColor.BLACK, x,6));
+            addPiece(new Pawn(PlayerColor.WHITE, new Position(x, 1)));
+            addPiece(new Pawn(PlayerColor.BLACK, new Position(x, 6)));
         }
     }
 
     public void setRooks() {
-        addPiece(new Rook(PlayerColor.WHITE,0,0));
-        addPiece(new Rook(PlayerColor.WHITE,7,0));
-        addPiece(new Rook(PlayerColor.BLACK,0,7));
-        addPiece(new Rook(PlayerColor.BLACK,7,7));
+        addPiece(new Rook(PlayerColor.WHITE, new Position(0, 0)));
+        addPiece(new Rook(PlayerColor.WHITE, new Position(7, 0)));
+        addPiece(new Rook(PlayerColor.BLACK, new Position(0, 7)));
+        addPiece(new Rook(PlayerColor.BLACK, new Position(7, 7)));
     }
 
     public void setKnights() {
-        addPiece(new Knight(PlayerColor.WHITE,1,0));
-        addPiece(new Knight(PlayerColor.WHITE,6,0));
-        addPiece(new Knight(PlayerColor.BLACK,1,7));
-        addPiece(new Knight(PlayerColor.BLACK,6,7));
+        addPiece(new Knight(PlayerColor.WHITE, new Position(1, 0)));
+        addPiece(new Knight(PlayerColor.WHITE, new Position(6, 0)));
+        addPiece(new Knight(PlayerColor.BLACK, new Position(1, 7)));
+        addPiece(new Knight(PlayerColor.BLACK, new Position(6, 7)));
     }
 
     public void setBishops() {
-        addPiece(new Bishop(PlayerColor.WHITE,2,0));
-        addPiece(new Bishop(PlayerColor.WHITE,5,0));
-        addPiece(new Bishop(PlayerColor.BLACK,2,7));
-        addPiece(new Bishop(PlayerColor.BLACK,5,7));
+        addPiece(new Bishop(PlayerColor.WHITE, new Position(2, 0)));
+        addPiece(new Bishop(PlayerColor.WHITE, new Position(5, 0)));
+        addPiece(new Bishop(PlayerColor.BLACK, new Position(2, 7)));
+        addPiece(new Bishop(PlayerColor.BLACK, new Position(5, 7)));
     }
 
     public void setQueens() {
-        addPiece(new Queen(PlayerColor.WHITE,3,0));
-        addPiece(new Queen(PlayerColor.BLACK,3,7));
+        addPiece(new Queen(PlayerColor.WHITE, new Position(3, 0)));
+        addPiece(new Queen(PlayerColor.BLACK, new Position(3, 7)));
     }
 
     public void setKings() {
-        addPiece(new King(PlayerColor.WHITE,4,0));
-        addPiece(new King(PlayerColor.BLACK,4,7));
+        addPiece(new King(PlayerColor.WHITE, new Position(4, 0)));
+        addPiece(new King(PlayerColor.BLACK, new Position(4, 7)));
     }
 
     public void setEmptySquares() {
@@ -93,25 +91,28 @@ public class Board {
         }
     }
 
-    public void removePiece(int x, int y) {
-        Piece piece = board[x][y].getOccupant();
+    public void removePiece(Position pos) {
+        Piece piece = board[pos.x()][pos.y()].getOccupant();
         if(piece == null) return;
         if(piece.color() == PlayerColor.WHITE) {
             whitePieces.remove(piece);
         } else {
             blackPieces.remove(piece);
         }
-        board[x][y].setOccupant(null);
+        board[pos.x()][pos.y()].setOccupant(null);
     }
 
-    public void movePiece(int fromX, int fromY, int toX, int toY) {
-        board[fromX][fromY].getOccupant().setXY(toX, toY);
-        board[toX][toY].setOccupant(board[fromX][fromY].getOccupant());
-        board[fromX][fromY].setOccupant(null);
+    public void movePiece(Move move) {
+        if(move == null) return;
+
+        Position from = move.from(), to = move.to();
+        board[from.x()][from.y()].getOccupant().setXY(to.x(), to.y());
+        board[to.x()][to.y()].setOccupant(board[from.x()][from.y()].getOccupant());
+        board[from.x()][from.y()].setOccupant(null);
     }
 
-    public Piece getPiece(int x, int y) {
-        return board[x][y].getOccupant();
+    public Piece getPiece(Position pos) {
+        return board[pos.x()][pos.y()].getOccupant();
     }
 
     public HashSet<Piece> getPlayerPieces(PlayerColor color) {

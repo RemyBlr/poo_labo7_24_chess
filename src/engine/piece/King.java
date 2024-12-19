@@ -12,8 +12,8 @@ import java.util.HashSet;
 
 public class King extends MovableOncePiece {
 
-    public King(PlayerColor color, int x, int y) {
-        super(color,x,y);
+    public King(PlayerColor color, Position pos) {
+        super(color, pos);
     }
 
     @Override
@@ -22,17 +22,38 @@ public class King extends MovableOncePiece {
     }
 
     @Override
-    public boolean isValidMove(int fromX, int fromY, int toX, int toY, Board board, Move lastMove) {
-        //samePosition deja pris en charge
-        return !(Math.abs(toX - fromX) > 1 || Math.abs(toY - fromY) > 1);
+    public boolean isValidMove(Move move, Board board, Move lastMove) {
+        Position from = move.from(), to = move.to();
+
+        // Ne peut que se déplacer d'une case
+        if (Math.abs(to.x() - from.x()) > 1 || Math.abs(to.y() - from.y()) > 1) {
+            System.out.println("1 case only for the king."); // Pourquoi on rentre ici même si le roi avance de 1 ?
+            return false;
+        }
+
+        // Simuler le déplacement pour vérifier si le roi est en échec
+        Piece pieceTo = board.getPiece(to);
+        board.movePiece(move);
+        boolean isChecked = isChecked(board, lastMove);
+        board.movePiece(new Move(to, from, pieceTo, null)); // Annuler le déplacement
+
+        if (isChecked) {
+            System.out.println("King is checked.");
+            return false;
+        }
+
+        return true;
     }
 
     public boolean isChecked(Board board, Move lastMove) {
-        PlayerColor enemyColor = color == PlayerColor.WHITE ? PlayerColor.BLACK : PlayerColor.WHITE;
+        Move hypotheticalMove;
+        PlayerColor enemyColor = color.equals(PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
         HashSet<Piece> enemyPieces = board.getPlayerPieces(enemyColor);
         for (Piece enemy : enemyPieces) {
-            if(!enemy.isValidMove(enemy.x, enemy.y, x, y, board, lastMove)) continue;
-            return true;
+            hypotheticalMove = new Move(new Position(enemy.pos().x(), enemy.pos().y()), this.pos, enemy, this);
+            if (enemy.isValidMove(hypotheticalMove, board, lastMove)) {
+                return true;
+            }
         }
         return false;
     }
