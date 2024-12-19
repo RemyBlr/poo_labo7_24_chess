@@ -67,6 +67,7 @@ public class King extends MovableOncePiece {
             // Petit roque
             if (small) {
                 Piece rook = board.getPiece(new Position(7, from.y()));
+                System.out.println("Rook: " + rook);
                 if (rook != null && rook instanceof Rook r && !r.hasMoved()) {
                     return true;
                 }

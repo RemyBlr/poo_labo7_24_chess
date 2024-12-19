@@ -51,12 +51,12 @@ public class Pawn extends MovableOncePiece {
         if (board.getPiece(to) == null &&  // empty space
                 from.x() == to.x() &&          // not horizontal
                 to.y() == from.y() + direction) {  // one square
-            setHasMoved(true);
+            setHasMoved();
             return true;
         }
 
         // Move two squares
-        if (!hasMadeFirstMove() &&         // has not moved
+        if (!hasMoved() &&         // has not moved
                 from.x() == to.x() &&          // not horizontal
                 to.y() == from.y() + 2 * direction) {  // two squares
 
@@ -64,7 +64,7 @@ public class Pawn extends MovableOncePiece {
             Piece squareInFrontPawn = board.getPiece(temp);
             Piece destinationSquare = board.getPiece(to);
 
-            setHasMoved(true);
+            setHasMoved();
             //move.setDoublePawnMove(true);
 
             // both square in front of pawn are empty

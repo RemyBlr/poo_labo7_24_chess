@@ -120,6 +120,11 @@ public class ChessGame implements ChessController {
             view.putPiece(pieceFrom.type(), pieceFrom.color(), to.x(), to.y());
         }
 
+        // Où mettre ça ? Comment ne pas istanceof ça ?
+        if(pieceFrom instanceof MovableOncePiece) {
+            ((MovableOncePiece) pieceFrom).setHasMoved();
+        }
+
         currentPlayerColor = (currentPlayerColor == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
         view.displayMessage("It's " + currentPlayerColor + "'s turn");
         this.lastMove = move; // save last move for checks

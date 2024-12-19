@@ -15,12 +15,8 @@ public abstract class MovableOncePiece extends Piece {
         super(color, pos);
     }
 
-    public boolean hasMadeFirstMove() {
-        return hasMoved;
-    }
-
-    public void setHasMoved(boolean state) {
-        hasMoved = state;
+    public void setHasMoved() {
+        hasMoved = true;
     }
 
     public boolean hasMoved() {
