@@ -30,11 +30,10 @@ public class King extends MovableOncePiece {
 
         // Roque (petit ou grand)
         if(isRoquable(move, board)) {
-            System.out.println("Roque");
             return true;
         }
 
-        // Ne peut se déplacer que d'une case ou tenter un roque
+        // Ne peut se déplacer que d'une case
         if (Math.abs(to.x() - from.x()) > 1 || Math.abs(to.y() - from.y()) > 1) {
             System.out.println("1 case only for the king."); // Pourquoi on rentre ici même si le roi avance de 1 ?
             return false;

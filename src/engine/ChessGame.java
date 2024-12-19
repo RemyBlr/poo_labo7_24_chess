@@ -97,11 +97,11 @@ public class ChessGame implements ChessController {
 
         // Roque
         if (pieceFrom.type() == PieceType.KING && ((King) pieceFrom).isRoquable(move, board)) {
-            Position rookPos = new Position((from.x() + to.x()) / 2, from.y());
-            Position rookDest = new Position((from.x() + to.x()) / 2 + 1, from.y());
-            Piece rook = board.getPiece(rookPos);
-            board.movePiece(new Move(rookPos, rookDest));
-            view.removePiece(rookPos.x(), rookPos.y());
+            board.movePiece(move);
+            view.removePiece(fromX, fromY);
+            view.putPiece(pieceFrom.type(), pieceFrom.color(), to.x(), to.y());
+            view.removePiece(toX, toY);
+            view.putPiece(PieceType.ROOK, pieceFrom.color(), to.x() + 1, to.y());
         } else { // Normal move
             board.movePiece(move);
             view.removePiece(fromX, fromY);
