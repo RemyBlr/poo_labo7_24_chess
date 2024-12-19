@@ -13,7 +13,7 @@ public class ChessGame implements ChessController {
     private Board board;
     private boolean isGameOver;
     private PlayerColor currentPlayerColor;
-    private Move lastMove = new Move(new Position(-1,-1), new Position(-1,-1), null, null);
+    private Move lastMove = new Move(new Position(-1,-1), new Position(-1,-1));
 
     @Override
     public void start(ChessView view) {
@@ -34,75 +34,48 @@ public class ChessGame implements ChessController {
     public boolean move(int fromX, int fromY, int toX, int toY) {
         Position from = new Position(fromX, fromY), to = new Position(toX, toY);
         Piece pieceFrom = board.getPiece(from), pieceTo = board.getPiece(to);
-        Move move = new Move(from, to, pieceFrom, pieceTo);
+        Move move = new Move(from, to);
 
-        if(!move.samePosition()) {
-            view.displayMessage("You can't move a piece to the same position");
-        }
-
-        if(!move.pieceSelected()) {
+        // A piece must be selected to move a piece
+        if(pieceFrom == null) {
             view.displayMessage("Select one piece to move");
             return false;
         }
 
-        // Check if the piece is the current player's piece
-        if(!move.isPlayerTurn(currentPlayerColor)) {
-            view.displayMessage("It's not your turn");
-            return false;
-        }
+          // Check if the piece is the current player's piece
+//        if(!pieceFrom.color().equals(currentPlayerColor)) {
+//            view.displayMessage("It's not your turn");
+//            return false;
+//        }
 
-        if(!move.isInsideBoard()) {
+        // Positions must be inside the board
+        if(!from.isInsideBoard() || !to.isInsideBoard()) { // isInsideBoard() doit être dans Piece ou Board ???
             view.displayMessage("Out of board");
             return false;
         }
 
-        System.out.println("(" + fromX + ", " + fromY + ") -> (" + toX + ", " + toY + ") Type=" + pieceFrom.type());
-
-        // Roque (petit ou grand)
-        if (move.isRoque()) {
-            // if(pieceFrom.Color() == Color.WHITE) l'inverse peut-être ?
-            int incrX = -1; // Gauche
-            if (toX > fromX) incrX = 1; // Droite
-            for (int x = fromX + incrX; x != toX; x += incrX) {
-                if (board.getPiece(new Position(x, fromY)) != null) {
-                    view.displayMessage("You can't roque");
-                    return false;
-                }
-            }
-
-            int newKingX, newRookX;
-            if(toX > fromX) {
-                newKingX = fromX + 2;
-                newRookX = fromX + 1;
-            }
-            else {
-                newKingX = fromX - 2;
-                newRookX = fromX - 1;
-            }
-
-            Move roqueMove = new Move(from, new Position(newKingX, fromY), pieceFrom, pieceTo);
-
-            board.movePiece(roqueMove);
-            view.removePiece(from.x(), from.y());
-            view.putPiece(pieceFrom.type(), pieceFrom.color(), newKingX, fromY);
-
-            Move rookMove = new Move(new Position(fromX, fromY), new Position(newRookX, fromY), pieceFrom, pieceTo);
-            board.movePiece(rookMove);
-            view.removePiece(toX, toY);
-            view.putPiece(pieceTo.type(), pieceTo.color(), newRookX, toY);
+        // Cannot move a piece to the same position
+        if(from.equals(to)) {
+            view.displayMessage("You can't move a piece to the same position");
         }
 
-        if(move.isSameColor()) {
-            view.displayMessage("You can't eat your own piece");
-            return false;
-        }
+        System.out.println("(" + from + ") -> (" + to + ") Type=" + pieceFrom.type());
+
+        // Roque déplacé dans le isValidMove de la classe King
 
         // Check if the move is valid for the piece type
-        if(!move.isValidMove(board, lastMove)) {
+        if(!pieceFrom.isValidMove(move, board, lastMove)) {
             view.displayMessage(pieceFrom + " can't move to this position");
             return false;
         }
 
+        // Can't eat your own piece
+        if(pieceTo != null && pieceFrom.color().equals(pieceTo.color())) { // J'ai du mettre après le isValidMove car le roi ne peut pas roque sinon
+            view.displayMessage("You can't eat your own piece");
+            return false;
+        }
+
+        /*
         if(lastMove.isEnPassant()) {
             int direction = (pieceFrom.color() == PlayerColor.WHITE) ? 1 : -1;
             board.removePiece(new Position(toX, toY - direction));
@@ -112,12 +85,12 @@ public class ChessGame implements ChessController {
             view.removePiece(toX, toY);
             board.removePiece(to);
         }
-
+        */
         board.movePiece(move);
         view.removePiece(fromX, fromY);
-        view.putPiece(pieceFrom.type(), pieceFrom.color(), toX, toY);
+        view.putPiece(pieceFrom.type(), pieceFrom.color(), to.x(), to.y());
 
-        if (move.isFinish(board)) {
+        if (board.isCheckMate() || board.isStaleMate()) {
             isGameOver = true;
             view.displayMessage("Game over");
             newGame();

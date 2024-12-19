@@ -7,9 +7,31 @@ import engine.Move;
 import engine.Position;
 
 public class Pawn extends MovableOncePiece {
+    private boolean isEnPassant;
+    private boolean doublePawnMove;
+    private boolean isPromotion;
 
     public Pawn(PlayerColor color, Position pos) {
         super(color,pos);
+        this.isEnPassant = false;
+        this.doublePawnMove = false;
+        this.isPromotion = false;
+    }
+
+    public boolean isEnPassant() {
+        return isEnPassant;
+    }
+
+    public void setEnPassant(boolean enPassant) {
+        isEnPassant = enPassant;
+    }
+
+    public boolean wasDoublePawnMove() {
+        return doublePawnMove;
+    }
+
+    public void setDoublePawnMove(boolean doublePawnMove) {
+        this.doublePawnMove = doublePawnMove;
     }
 
     @Override
@@ -17,6 +39,7 @@ public class Pawn extends MovableOncePiece {
         return PieceType.PAWN;
     }
 
+    //TODO
     @Override
     public boolean isValidMove(Move move, Board board, Move lastMove) {
         Position from = move.from(), to = move.to();
@@ -42,7 +65,7 @@ public class Pawn extends MovableOncePiece {
             Piece destinationSquare = board.getPiece(to);
 
             setHasMoved(true);
-            move.setDoublePawnMove(true);
+            //move.setDoublePawnMove(true);
 
             // both square in front of pawn are empty
             return squareInFrontPawn == null && destinationSquare == null;
@@ -64,11 +87,11 @@ public class Pawn extends MovableOncePiece {
 
             // last move from enemy pawn has to be 2 squares and land right next to our pawn
             if (board.getPiece(to) == null &&
-                    lastMove.wasDoublePawnMove() &&
+                    //lastMove.wasDoublePawnMove() &&
                     hasEnemyPawnNext) {
 
                 Piece moved = board.getPiece(new Position(lastMove.to().x(), lastMove.to().y()));
-                lastMove.setEnPassant(true);
+                //lastMove.setEnPassant(true);
                 // enemy pawn
                 return moved.type() == PieceType.PAWN && moved.color() != color() && lastMove.to().x() == to.x() && lastMove.to().y() == from.y();
             }

@@ -7,13 +7,13 @@ import java.util.HashSet;
 
 public class Board {
     private final int BOARD_SIZE = 8;
-    private Position[][] board;
+    private Piece[][] board;
 
-    HashSet<Piece> whitePieces = new HashSet<>();
-    HashSet<Piece> blackPieces = new HashSet<>();
+//    HashSet<Piece> whitePieces = new HashSet<>();
+//    HashSet<Piece> blackPieces = new HashSet<>();
 
     public Board() {
-        this.board = new Position[BOARD_SIZE][BOARD_SIZE];
+        this.board = new Piece[BOARD_SIZE][BOARD_SIZE];
         initializeBoard();
         setInitialPosition();
     }
@@ -21,7 +21,7 @@ public class Board {
     public void initializeBoard() {
         for(int x = 0; x < BOARD_SIZE; x++) {
             for(int y = 0; y < BOARD_SIZE; y++) {
-                board[x][y] = new Position(x, y);
+                board[x][y] = null;
             }
         }
     }
@@ -37,12 +37,14 @@ public class Board {
     }
 
     private void addPiece(Piece piece) {
+        /*
         if(piece.color() == PlayerColor.WHITE) {
             whitePieces.add(piece);
         } else {
             blackPieces.add(piece);
         }
-        board[piece.pos().x()][piece.pos().y()].setOccupant(piece);
+        */
+        board[piece.pos().x()][piece.pos().y()] = piece;
     }
 
     public void setPawns() {
@@ -86,47 +88,46 @@ public class Board {
     public void setEmptySquares() {
         for(int x = 0; x < BOARD_SIZE; x++) {
             for(int y = 2; y < 6; y++) {
-                board[x][y].setOccupant(null);
+                board[x][y] = null;
             }
         }
     }
 
     public void removePiece(Position pos) {
-        Piece piece = board[pos.x()][pos.y()].getOccupant();
+        Piece piece = board[pos.x()][pos.y()];
         if(piece == null) return;
+        /*
         if(piece.color() == PlayerColor.WHITE) {
             whitePieces.remove(piece);
         } else {
             blackPieces.remove(piece);
         }
-        board[pos.x()][pos.y()].setOccupant(null);
+        */
+        board[pos.x()][pos.y()] = null;
     }
 
     public void movePiece(Move move) {
-        if(move == null) return;
-
         Position from = move.from(), to = move.to();
-        board[from.x()][from.y()].getOccupant().setXY(to.x(), to.y());
-        board[to.x()][to.y()].setOccupant(board[from.x()][from.y()].getOccupant());
-        board[from.x()][from.y()].setOccupant(null);
+
+        board[from.x()][from.y()].setPos(to);
+        board[to.x()][to.y()] = board[from.x()][from.y()];
+        board[from.x()][from.y()] = null;
     }
 
     public Piece getPiece(Position pos) {
-        return board[pos.x()][pos.y()].getOccupant();
+        return board[pos.x()][pos.y()];
     }
 
-    public HashSet<Piece> getPlayerPieces(PlayerColor color) {
-        return color == PlayerColor.WHITE ? whitePieces : blackPieces;
-    }
-
-    public Position[][] getBoardCells() {
+    public Piece[][] getBoardPieces() {
         return board;
     }
 
+    // TODO
     public boolean isCheckMate() {
         return false;
     }
 
+    // TODO
     public boolean isStaleMate() {
         return false;
     }
