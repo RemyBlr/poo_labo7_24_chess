@@ -82,18 +82,21 @@ public class Pawn extends MovableOncePiece {
 
             // en passant
             // true if pawn next to landing position
-            boolean hasEnemyPawnNext = board.getPiece(new Position(lastMove.to().x() - 1, lastMove.to().y())) != null ||
-                    board.getPiece(new Position(lastMove.to().x() + 1, lastMove.to().y())) != null;
+            if(lastMove != null || lastMove.to() != null && lastMove.from() != null) { // Ajout check null
+                boolean hasEnemyPawnNext = board.getPiece(new Position(lastMove.to().x() - 1, lastMove.to().y())) != null ||
+                        board.getPiece(new Position(lastMove.to().x() + 1, lastMove.to().y())) != null;
 
-            // last move from enemy pawn has to be 2 squares and land right next to our pawn
-            if (board.getPiece(to) == null &&
-                    //lastMove.wasDoublePawnMove() &&
-                    hasEnemyPawnNext) {
 
-                Piece moved = board.getPiece(new Position(lastMove.to().x(), lastMove.to().y()));
-                //lastMove.setEnPassant(true);
-                // enemy pawn
-                return moved.type() == PieceType.PAWN && moved.color() != color() && lastMove.to().x() == to.x() && lastMove.to().y() == from.y();
+                // last move from enemy pawn has to be 2 squares and land right next to our pawn
+                if (board.getPiece(to) == null &&
+                        //lastMove.wasDoublePawnMove() &&
+                        hasEnemyPawnNext) {
+
+                    Piece moved = board.getPiece(new Position(lastMove.to().x(), lastMove.to().y()));
+                    //lastMove.setEnPassant(true);
+                    // enemy pawn
+                    return moved.type() == PieceType.PAWN && moved.color() != color() && lastMove.to().x() == to.x() && lastMove.to().y() == from.y();
+                }
             }
         }
 

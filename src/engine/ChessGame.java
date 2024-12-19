@@ -4,6 +4,7 @@ import chess.ChessController;
 import chess.ChessView;
 import chess.PieceType;
 import chess.PlayerColor;
+import engine.piece.King;
 import engine.piece.MovableOncePiece;
 import engine.piece.Piece;
 
@@ -86,15 +87,37 @@ public class ChessGame implements ChessController {
             board.removePiece(to);
         }
         */
-        board.movePiece(move);
-        view.removePiece(fromX, fromY);
-        view.putPiece(pieceFrom.type(), pieceFrom.color(), to.x(), to.y());
 
         if (board.isCheckMate() || board.isStaleMate()) {
             isGameOver = true;
             view.displayMessage("Game over");
             newGame();
             return false;
+        }
+
+        // Roque
+        if (pieceFrom.type() == PieceType.KING && ((King) pieceFrom).isRoquable(move, board)) {
+            // Mettre à jour le roi
+            board.movePiece(move);
+            view.removePiece(fromX, fromY);
+            view.putPiece(PieceType.KING, pieceFrom.color(), to.x(), to.y());
+
+            // Mettre à jour la tour
+            boolean small = to.x() - fromX == 2;
+            if(small) {
+                board.movePiece(new Move(new Position(7, fromY), new Position(5, fromY)));
+                view.removePiece(7, fromY);
+                view.putPiece(PieceType.ROOK, pieceFrom.color(), 5, fromY);
+            } else {
+                board.movePiece(new Move(new Position(0, fromY), new Position(3, fromY)));
+                view.removePiece(0, fromY);
+                view.putPiece(PieceType.ROOK, pieceFrom.color(), 3, fromY);
+            }
+
+        } else { // Normal move
+            board.movePiece(move);
+            view.removePiece(fromX, fromY);
+            view.putPiece(pieceFrom.type(), pieceFrom.color(), to.x(), to.y());
         }
 
         currentPlayerColor = (currentPlayerColor == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
