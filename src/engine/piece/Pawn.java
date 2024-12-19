@@ -42,6 +42,7 @@ public class Pawn extends MovableOncePiece {
             Piece destinationSquare = board.getPiece(to);
 
             setHasMoved(true);
+            move.setDoublePawnMove(true);
 
             // both square in front of pawn are empty
             return squareInFrontPawn == null && destinationSquare == null;
