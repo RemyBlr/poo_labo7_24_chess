@@ -97,14 +97,6 @@ public class ChessGame implements ChessController {
             return false;
         }
 
-        // pawn moves two squares (info for en passant
-        if (pieceFrom.type() ==  PieceType.PAWN) {
-            int direction = (pieceFrom.color() == PlayerColor.WHITE) ? 1 : -1;
-            if (Math.abs(toY - fromY) == 2) {
-                move.setDoublePawnMove(true);
-            }
-        }
-
         // Check if the move is valid for the piece type
         if(!move.isValidMove(board, lastMove)) {
             view.displayMessage(pieceFrom + " can't move to this position");
