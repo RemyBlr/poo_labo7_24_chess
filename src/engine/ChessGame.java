@@ -4,9 +4,7 @@ import chess.ChessController;
 import chess.ChessView;
 import chess.PieceType;
 import chess.PlayerColor;
-import engine.piece.King;
-import engine.piece.MovableOncePiece;
-import engine.piece.Piece;
+import engine.piece.*;
 
 public class ChessGame implements ChessController {
 
@@ -125,6 +123,9 @@ public class ChessGame implements ChessController {
             ((MovableOncePiece) pieceFrom).setHasMoved();
         }
 
+        // Promotion
+        doPromotion(pieceFrom, to);
+
         currentPlayerColor = (currentPlayerColor == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
         view.displayMessage("It's " + currentPlayerColor + "'s turn");
         this.lastMove = move; // save last move for checks
@@ -143,6 +144,9 @@ public class ChessGame implements ChessController {
         displayBoard();
     }
 
+    /*
+     * Display the board
+     */
     public void displayBoard() {
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
@@ -151,6 +155,38 @@ public class ChessGame implements ChessController {
                     view.putPiece(piece.type(), piece.color(), x, y);
                 }
             }
+        }
+    }
+
+    /*
+     * Promote a pawn to a new piece
+     *
+     * @param pawn: the pawn to promote
+     * @param pos: the position of the pawn
+     */
+    public void doPromotion(Piece pawn,  Position pos) {
+        Piece newPiece = null;
+
+        if(((Pawn) pawn).isPromotion()) {
+
+            PromotionChoice[] possibilities = PromotionChoice.values();
+            PromotionChoice choice = view.askUser("Promotion", "Choose a piece", possibilities);
+
+            // create new piece
+            switch (choice) {
+                case QUEEN -> newPiece = new Queen(pawn.color(), pos);
+                case ROOK -> newPiece = new Rook(pawn.color(), pos);
+                case BISHOP -> newPiece = new Bishop(pawn.color(), pos);
+                case KNIGHT -> newPiece = new Knight(pawn.color(), pos);
+            }
+
+            // remove pawn and add new piece
+            board.removePiece(pos);
+            board.getBoardPieces()[pos.x()][pos.y()] = newPiece;
+
+            // update view
+            view.removePiece(pos.x(), pos.y());
+            view.putPiece(newPiece.type(), newPiece.color(), pos.x(), pos.y());
         }
     }
 }
