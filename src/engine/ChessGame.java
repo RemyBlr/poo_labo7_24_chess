@@ -41,11 +41,11 @@ public class ChessGame implements ChessController {
             return false;
         }
 
-          // Check if the piece is the current player's piece
-//        if(!pieceFrom.color().equals(currentPlayerColor)) {
-//            view.displayMessage("It's not your turn");
-//            return false;
-//        }
+        // Check if the piece is the current player's piece
+        if(!pieceFrom.color().equals(currentPlayerColor)) {
+            view.displayMessage("It's not your turn");
+            return false;
+        }
 
         // Positions must be inside the board
         if(!from.isInsideBoard() || !to.isInsideBoard()) { // isInsideBoard() doit être dans Piece ou Board ???
@@ -73,18 +73,6 @@ public class ChessGame implements ChessController {
             view.displayMessage("You can't eat your own piece");
             return false;
         }
-
-        /*
-        if(lastMove.isEnPassant()) {
-            int direction = (pieceFrom.color() == PlayerColor.WHITE) ? 1 : -1;
-            board.removePiece(new Position(toX, toY - direction));
-            view.removePiece(to.x(), to.y() - direction);
-        }
-        else {
-            view.removePiece(toX, toY);
-            board.removePiece(to);
-        }
-        */
 
         if (board.isCheckMate() || board.isStaleMate()) {
             isGameOver = true;
@@ -122,6 +110,9 @@ public class ChessGame implements ChessController {
         if(pieceFrom instanceof MovableOncePiece) {
             ((MovableOncePiece) pieceFrom).setHasMoved();
         }
+
+        // en passant
+        doEnPassant(pieceFrom, to);
 
         // Promotion
         doPromotion(pieceFrom, to);
@@ -187,6 +178,18 @@ public class ChessGame implements ChessController {
             // update view
             view.removePiece(pos.x(), pos.y());
             view.putPiece(newPiece.type(), newPiece.color(), pos.x(), pos.y());
+        }
+    }
+
+    public void doEnPassant(Piece pawn, Position to) {
+        if(((Pawn) pawn).isEnPassant()) {
+            int direction = (pawn.color() == PlayerColor.WHITE) ? 1 : -1;
+            Position enemyPawnPos = new Position(to.x(), to.y() - direction);
+
+            board.removePiece(enemyPawnPos);
+            view.removePiece(enemyPawnPos.x(), enemyPawnPos.y());
+
+            ((Pawn) pawn).setEnPassant(false);
         }
     }
 }
