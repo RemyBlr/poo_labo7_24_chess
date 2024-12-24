@@ -117,9 +117,9 @@ public class ChessGame implements ChessController {
         // Promotion
         doPromotion(pieceFrom, to);
 
-        currentPlayerColor = (currentPlayerColor == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
-        view.displayMessage("It's " + currentPlayerColor + "'s turn");
-        this.lastMove = move; // save last move for checks
+        // switch player and save last move
+        finalizeMove(move);
+
         return true;
     }
 
@@ -155,7 +155,7 @@ public class ChessGame implements ChessController {
      * @param pawn: the pawn to promote
      * @param pos: the position of the pawn
      */
-    public void doPromotion(Piece pawn,  Position pos) {
+    private void doPromotion(Piece pawn,  Position pos) {
         Piece newPiece = null;
 
         if(((Pawn) pawn).isPromotion()) {
@@ -181,7 +181,7 @@ public class ChessGame implements ChessController {
         }
     }
 
-    public void doEnPassant(Piece pawn, Position to) {
+    private void doEnPassant(Piece pawn, Position to) {
         if(((Pawn) pawn).isEnPassant()) {
             int direction = (pawn.color() == PlayerColor.WHITE) ? 1 : -1;
             Position enemyPawnPos = new Position(to.x(), to.y() - direction);
@@ -191,5 +191,11 @@ public class ChessGame implements ChessController {
 
             ((Pawn) pawn).setEnPassant(false);
         }
+    }
+
+    private void finalizeMove(Move move) {
+        this.lastMove = move; // save last move for checks
+        currentPlayerColor = (currentPlayerColor == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
+        view.displayMessage("It's " + currentPlayerColor + "'s turn");
     }
 }

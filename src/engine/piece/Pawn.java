@@ -68,6 +68,7 @@ public class Pawn extends MovableOncePiece {
         if (board.getPiece(to) == null &&  // empty space
                 from.x() == to.x() &&          // not horizontal
                 to.y() == from.y() + direction) {  // one square
+
             checkPromotion(to); // could be promotion on normal move
             setHasMoved();
             return true;
