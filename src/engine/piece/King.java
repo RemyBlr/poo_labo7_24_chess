@@ -42,6 +42,45 @@ public class King extends MovableOncePiece {
         return true;
     }
 
+    @Override
+    public void executeMove(Move move, Board board, ChessView view, Move lastMove) {
+
+        // check if castling move
+        if (isRoquable(move, board)) {
+
+            // move king
+            board.movePiece(move);
+            view.removePiece(move.from().x(), move.from().y());
+            view.putPiece(this.type(), this.color(), move.to().x(), move.to().y());
+
+            // move rook
+            boolean isKingSide = (move.to().x() - move.from().x()) == 2;
+
+            if(isKingSide) {
+                // small roque
+                Move rookMove = new Move(
+                        new Position(7, move.from().y()),
+                        new Position(5, move.from().y())
+                );
+                board.movePiece(rookMove);
+                view.removePiece(7, move.from().y());
+                view.putPiece(PieceType.ROOK, this.color(), 5, move.from().y());
+            } else {
+                // queen side roque
+                Move rookMove = new Move(
+                        new Position(0, move.from().y()),
+                        new Position(3, move.from().y())
+                );
+                board.movePiece(rookMove);
+                view.removePiece(0, move.from().y());
+                view.putPiece(PieceType.ROOK, this.color(), 3, move.from().y());
+            }
+        } else {
+            // normal king move
+            super.executeMove(move, board, view, lastMove);
+        }
+    }
+
     //TODO
     public boolean isChecked(Board board, Move lastMove) {
         /*

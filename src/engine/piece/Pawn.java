@@ -5,6 +5,8 @@ import chess.PlayerColor;
 import engine.Board;
 import engine.Move;
 import engine.Position;
+import chess.ChessView;
+import engine.PromotionChoice;
 
 public class Pawn extends MovableOncePiece {
     private boolean isEnPassant;
@@ -124,5 +126,52 @@ public class Pawn extends MovableOncePiece {
         }
 
         return false;
+    }
+
+    @Override
+    public void executeMove(Move move, Board board, ChessView view, Move lastMove) {
+
+        // basic movement on board
+        board.movePiece(move);
+        view.removePiece(move.from().x(), move.from().y());
+        view.putPiece(this.type(), this.color(), move.to().x(), move.to().y());
+
+        // handle en passant
+        if (isEnPassant) {
+            int direction = (color() == PlayerColor.WHITE) ? 1 : -1;
+            Position capturedPos = new Position(move.to().x(), move.to().y() - direction);
+
+            board.removePiece(capturedPos);
+            view.removePiece(capturedPos.x(), capturedPos.y());
+
+            setEnPassant(false); // reset
+        }
+
+        // handle promotion
+        if (isPromotion) {
+            // ask user
+            PromotionChoice[] choices = PromotionChoice.values();
+            PromotionChoice userChoice = view.askUser(
+                    "Promotion",
+                    "Choose a piece to promote to:",
+                    choices
+            );
+
+            // new piece
+            Piece newPiece = switch (userChoice) {
+                case QUEEN -> new Queen(color(), move.to());
+                case ROOK -> new Rook(color(), move.to());
+                case BISHOP -> new Bishop(color(), move.to());
+                case KNIGHT -> new Knight(color(), move.to());
+            };
+
+            // remove pawn from board
+            board.removePiece(move.to());
+            view.removePiece(move.to().x(), move.to().y());
+
+            // place new piece
+            board.getBoardPieces()[move.to().x()][move.to().y()] = newPiece;
+            view.putPiece(newPiece.type(), newPiece.color(), move.to().x(), move.to().y());
+        }
     }
 }

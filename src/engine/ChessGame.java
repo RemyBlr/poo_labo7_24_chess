@@ -68,6 +68,8 @@ public class ChessGame implements ChessController {
             return false;
         }
 
+
+
         // Can't eat your own piece
         if(pieceTo != null && pieceFrom.color().equals(pieceTo.color())) { // J'ai du mettre après le isValidMove car le roi ne peut pas roque sinon
             view.displayMessage("You can't eat your own piece");
@@ -81,7 +83,11 @@ public class ChessGame implements ChessController {
             return false;
         }
 
-        // Roque
+        pieceFrom.executeMove(move, board, view, lastMove);
+
+        pieceFrom.afterMove();
+
+        /*// Roque
         if (pieceFrom.type() == PieceType.KING && ((King) pieceFrom).isRoquable(move, board)) {
             // Mettre à jour le roi
             board.movePiece(move);
@@ -104,18 +110,13 @@ public class ChessGame implements ChessController {
             board.movePiece(move);
             view.removePiece(fromX, fromY);
             view.putPiece(pieceFrom.type(), pieceFrom.color(), to.x(), to.y());
-        }
+        }*/
 
-        // Où mettre ça ? Comment ne pas istanceof ça ?
-        if(pieceFrom instanceof MovableOncePiece) {
-            ((MovableOncePiece) pieceFrom).setHasMoved();
-        }
-
-        // en passant
+        /*// en passant
         doEnPassant(pieceFrom, to);
 
         // Promotion
-        doPromotion(pieceFrom, to);
+        doPromotion(pieceFrom, to);*/
 
         // switch player and save last move
         finalizeMove(move);
@@ -155,7 +156,7 @@ public class ChessGame implements ChessController {
      * @param pawn: the pawn to promote
      * @param pos: the position of the pawn
      */
-    private void doPromotion(Piece pawn,  Position pos) {
+    /*private void doPromotion(Piece pawn,  Position pos) {
         Piece newPiece = null;
 
         if(((Pawn) pawn).isPromotion()) {
@@ -179,9 +180,15 @@ public class ChessGame implements ChessController {
             view.removePiece(pos.x(), pos.y());
             view.putPiece(newPiece.type(), newPiece.color(), pos.x(), pos.y());
         }
-    }
+    }*/
 
-    private void doEnPassant(Piece pawn, Position to) {
+    /*
+     * Handle en passant
+     *
+     * @param pawn: the pawn to move
+     * @param to: the position to move the pawn to
+     */
+    /*private void doEnPassant(Piece pawn, Position to) {
         if(((Pawn) pawn).isEnPassant()) {
             int direction = (pawn.color() == PlayerColor.WHITE) ? 1 : -1;
             Position enemyPawnPos = new Position(to.x(), to.y() - direction);
@@ -191,7 +198,7 @@ public class ChessGame implements ChessController {
 
             ((Pawn) pawn).setEnPassant(false);
         }
-    }
+    }*/
 
     private void finalizeMove(Move move) {
         this.lastMove = move; // save last move for checks

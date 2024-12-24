@@ -27,4 +27,9 @@ public abstract class MovableOncePiece extends Piece {
     public String toString() {
         return super.toString();
     }
+
+    @Override
+    public void afterMove() {
+        setHasMoved();
+    }
 }
