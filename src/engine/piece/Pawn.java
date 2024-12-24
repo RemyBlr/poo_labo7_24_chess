@@ -60,8 +60,9 @@ public class Pawn extends MovableOncePiece {
 
     //TODO
     @Override
-    public boolean isValidMove(Move move, Board board, Move lastMove) {
+    public boolean isValidMove(Move move, Board board) {
         Position from = move.from(), to = move.to();
+        Move lastMove = board.getLastMove();
 
         // 1 go up, -1 go down
         int direction = (color() == PlayerColor.WHITE) ? 1 : -1;

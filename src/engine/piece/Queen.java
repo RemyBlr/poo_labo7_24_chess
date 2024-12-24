@@ -23,7 +23,7 @@ public class Queen extends Piece {
         return PieceType.QUEEN;
     }
 
-    public boolean isValidMove(Move move, Board board, Move lastMove) {
+    public boolean isValidMove(Move move, Board board) {
 
         if(!MoveUtils.isDiagonalMove(move) && !MoveUtils.isStraightMove(move)) return false;
 

@@ -63,7 +63,7 @@ public class ChessGame implements ChessController {
         // Roque déplacé dans le isValidMove de la classe King
 
         // Check if the move is valid for the piece type
-        if(!pieceFrom.isValidMove(move, board, lastMove)) {
+        if(!pieceFrom.isValidMove(move, board)) {
             view.displayMessage(pieceFrom + " can't move to this position");
             return false;
         }
@@ -200,8 +200,13 @@ public class ChessGame implements ChessController {
         }
     }*/
 
+    /*
+     * Switch player and save last move
+     *
+     * @param move: the last move
+     */
     private void finalizeMove(Move move) {
-        this.lastMove = move; // save last move for checks
+        board.setLastMove(move); // save last move for checks
         currentPlayerColor = (currentPlayerColor == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
         view.displayMessage("It's " + currentPlayerColor + "'s turn");
     }

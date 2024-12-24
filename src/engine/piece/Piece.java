@@ -29,7 +29,7 @@ public abstract class Piece {
 
     public abstract PieceType type();
 
-    public abstract boolean isValidMove(Move move, Board board, Move lastMove);
+    public abstract boolean isValidMove(Move move, Board board);
 
     public void executeMove(Move move, Board board, ChessView view, Move lastMove) {
         // default move

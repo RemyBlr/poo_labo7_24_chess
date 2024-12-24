@@ -8,6 +8,7 @@ import java.util.HashSet;
 public class Board {
     private final int BOARD_SIZE = 8;
     private Piece[][] board;
+    private Move lastMove;
 
 //    HashSet<Piece> whitePieces = new HashSet<>();
 //    HashSet<Piece> blackPieces = new HashSet<>();
@@ -112,6 +113,14 @@ public class Board {
         board[from.x()][from.y()].setPos(to);
         board[to.x()][to.y()] = board[from.x()][from.y()];
         board[from.x()][from.y()] = null;
+    }
+
+    public void setLastMove(Move move) {
+        this.lastMove = move;
+    }
+
+    public Move getLastMove() {
+        return lastMove;
     }
 
     public Piece getPiece(Position pos) {

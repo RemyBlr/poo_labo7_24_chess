@@ -23,7 +23,7 @@ public class Bishop extends Piece {
         return PieceType.BISHOP;
     }
 
-    public boolean isValidMove(Move move, Board board, Move lastMove) {
+    public boolean isValidMove(Move move, Board board) {
         // Cannot go through obstacles
         if (!MoveUtils.isDiagonalMove(move)) return false;
 

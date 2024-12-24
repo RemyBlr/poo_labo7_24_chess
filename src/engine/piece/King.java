@@ -19,8 +19,9 @@ public class King extends MovableOncePiece {
     }
 
     @Override
-    public boolean isValidMove(Move move, Board board, Move lastMove) {
+    public boolean isValidMove(Move move, Board board) {
         Position from = move.from(), to = move.to();
+        Move lastMove = board.getLastMove();
 
         // Ne peut pas se mettre en échec tout seul
         if (isChecked(board, lastMove)) {

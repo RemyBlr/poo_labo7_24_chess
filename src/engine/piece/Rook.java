@@ -18,7 +18,7 @@ public class Rook extends MovableOncePiece {
         return PieceType.ROOK;
     }
 
-    public boolean isValidMove(Move move, Board board, Move lastMove) {
+    public boolean isValidMove(Move move, Board board) {
         // Cannot go through obstacles
         if(!MoveUtils.isStraightMove(move)) return false;
 
