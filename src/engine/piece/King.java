@@ -27,7 +27,7 @@ public class King extends MovableOncePiece {
         Move lastMove = board.getLastMove();
 
         // Ne peut pas se mettre en échec tout seul
-        if (isChecked(board, lastMove)) {
+        if (isChecked(board)) {
             System.out.println("King is checked.");
             return false;
         }
@@ -86,18 +86,24 @@ public class King extends MovableOncePiece {
     }
 
     //TODO
-    public boolean isChecked(Board board, Move lastMove) {
-        /*
-        Move hypotheticalMove;
+    public boolean isChecked(Board board) {
         PlayerColor enemyColor = color.equals(PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
-        HashSet<Piece> enemyPieces = board.getPlayerPieces(enemyColor);
-        for (Piece enemy : enemyPieces) {
-            hypotheticalMove = new Move(new Position(enemy.pos().x(), enemy.pos().y()), this.pos);
-            if (enemy.isValidMove(hypotheticalMove, board, lastMove)) {
-                return true;
+        Piece[][] pieces = board.getBoardPieces();
+
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                int index = 8 * y + x;
+                if(pieces[x][y] == null || pieces[x][y].color != enemyColor) {
+                    System.out.println("test : is null or not enemy at index = " + index);
+                    continue;
+                }
+
+                Move hypotheticalMove = new Move(pieces[x][y].pos(), this.pos);
+                pieces[x][y].isValidMove(hypotheticalMove, board);
+
             }
         }
-        */
+
         return false;
     }
 
