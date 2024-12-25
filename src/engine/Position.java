@@ -34,6 +34,10 @@ public class Position {
         return x >= 0 && x < 8 && y >= 0 && y < 8;
     }
 
+    public boolean equals(Position other) {
+        return (this.x() == other.x() && this.y() == other.y());
+    }
+
     public String toString() {
         return "(" + x + ", " + y + ")";
     }

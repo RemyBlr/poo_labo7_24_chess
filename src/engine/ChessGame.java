@@ -52,8 +52,9 @@ public class ChessGame implements ChessController {
         }
 
         // Cannot move a piece to the same position
-        if(from.equals(to)) {
+        if(pieceFrom.equals(pieceTo)) {
             view.displayMessage("You can't move a piece to the same position");
+            return false;
         }
 
         System.out.println("(" + from + ") -> (" + to + ") Type=" + pieceFrom.type());
