@@ -15,7 +15,7 @@ public class Board {
 
     public Board() {
         this.board = new Piece[BOARD_SIZE][BOARD_SIZE];
-        this.lastMove = new Move(new Position(-1,-1), new Position(-1,-1));
+        this.lastMove = null;
         initializeBoard();
         setInitialPosition();
     }
