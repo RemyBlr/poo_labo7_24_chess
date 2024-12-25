@@ -31,7 +31,7 @@ public abstract class Piece implements ChessView.UserChoice{
         // default move
         board.movePiece(move);
 
-        // update the view
+        // update view
         view.removePiece(move.from().x(), move.from().y());
         view.putPiece(this.type(), this.color(), move.to().x(), move.to().y());
     }

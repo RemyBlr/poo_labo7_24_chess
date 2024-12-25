@@ -4,7 +4,6 @@ import chess.PieceType;
 import chess.PlayerColor;
 import engine.Board;
 import engine.Move;
-import engine.MoveUtils;
 import engine.Position;
 
 public class Queen extends Piece {
@@ -20,13 +19,8 @@ public class Queen extends Piece {
     public PieceType type() {return PieceType.QUEEN;}
 
     public boolean isValidMove(Move move, Board board) {
-
-        //if(!MoveUtils.isDiagonalMove(move) && !MoveUtils.isStraightMove(move)) return false;
-
-        //if(!MoveUtils.isClearPathStraight(move, board)) return false;
-
-        return MoveUtils.isClearPathDiagonal(move, board) &&
-                MoveUtils.isDiagonalMove(move) ||
-                MoveUtils.isStraightMove(move);
+        return Move.isClearPathDiagonal(move, board) &&
+                Move.isDiagonalMove(move) ||
+                Move.isStraightMove(move);
     }
 }

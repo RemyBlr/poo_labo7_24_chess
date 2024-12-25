@@ -1,7 +1,6 @@
 package engine.piece;
 
 import chess.PlayerColor;
-import engine.Board;
 import engine.Position;
 
 /*

@@ -1,7 +1,5 @@
 package engine;
 
-import engine.piece.Piece;
-
 public class Position {
     private int x;
     private int y;

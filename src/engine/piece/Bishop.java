@@ -5,7 +5,6 @@ import chess.PlayerColor;
 import engine.Board;
 import engine.Move;
 import engine.Position;
-import engine.MoveUtils;
 
 public class Bishop extends Piece {
 
@@ -21,9 +20,7 @@ public class Bishop extends Piece {
 
     public boolean isValidMove(Move move, Board board) {
         // Cannot go through obstacles
-        //if (!MoveUtils.isDiagonalMove(move)) return false;
-
-        return MoveUtils.isClearPathDiagonal(move, board) &&
-                MoveUtils.isDiagonalMove(move);
+        return Move.isClearPathDiagonal(move, board) &&
+                Move.isDiagonalMove(move);
     }
 }

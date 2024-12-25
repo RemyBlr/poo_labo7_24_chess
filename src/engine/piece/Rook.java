@@ -4,7 +4,6 @@ import chess.PieceType;
 import chess.PlayerColor;
 import engine.Board;
 import engine.Move;
-import engine.MoveUtils;
 import engine.Position;
 
 public class Rook extends MovableOncePiece {
@@ -21,9 +20,7 @@ public class Rook extends MovableOncePiece {
 
     public boolean isValidMove(Move move, Board board) {
         // Cannot go through obstacles
-        //if(!MoveUtils.isStraightMove(move)) return false;
-
-        return MoveUtils.isClearPathStraight(move, board) &&
-                MoveUtils.isStraightMove(move);
+        return Move.isClearPathStraight(move, board) &&
+                Move.isStraightMove(move);
     }
 }

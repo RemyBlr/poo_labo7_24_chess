@@ -20,16 +20,8 @@ public class Knight extends Piece {
         return PieceType.KNIGHT;
     }
 
-    // Check if the move is a L move
-    private boolean isLMove(Move move) {
-        return (Math.abs(move.to().x() - move.from().x()) == 2 && Math.abs(move.to().y() - move.from().y()) == 1) || (Math.abs(move.to().x() - move.from().x()) == 1 && Math.abs(move.to().y() - move.from().y()) == 2);
-    }
-
     @Override
     public boolean isValidMove(Move move, Board board) {
-        /*if(!isLMove(move)) {
-            return false;
-        }*/
-        return isLMove(move);
+        return Move.isLMove(move);
     }
 }

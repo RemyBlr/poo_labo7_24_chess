@@ -3,15 +3,10 @@ package engine;
 import chess.PlayerColor;
 import engine.piece.*;
 
-import java.util.HashSet;
-
 public class Board {
     private final int BOARD_SIZE = 8;
     private Piece[][] board;
     private Move lastMove;
-
-//    HashSet<Piece> whitePieces = new HashSet<>();
-//    HashSet<Piece> blackPieces = new HashSet<>();
 
     public Board() {
         this.board = new Piece[BOARD_SIZE][BOARD_SIZE];
@@ -39,13 +34,6 @@ public class Board {
     }
 
     private void addPiece(Piece piece) {
-        /*
-        if(piece.color() == PlayerColor.WHITE) {
-            whitePieces.add(piece);
-        } else {
-            blackPieces.add(piece);
-        }
-        */
         board[piece.pos().x()][piece.pos().y()] = piece;
     }
 
@@ -98,13 +86,6 @@ public class Board {
     public void removePiece(Position pos) {
         Piece piece = board[pos.x()][pos.y()];
         if(piece == null) return;
-        /*
-        if(piece.color() == PlayerColor.WHITE) {
-            whitePieces.remove(piece);
-        } else {
-            blackPieces.remove(piece);
-        }
-        */
         board[pos.x()][pos.y()] = null;
     }
 
