@@ -14,9 +14,10 @@ public class Rook extends MovableOncePiece {
     }
 
     @Override
-    public PieceType type() {
-        return PieceType.ROOK;
-    }
+    public String textValue() {return getClass().getSimpleName();}
+
+    @Override
+    public PieceType type() {return PieceType.ROOK;}
 
     public boolean isValidMove(Move move, Board board) {
         // Cannot go through obstacles

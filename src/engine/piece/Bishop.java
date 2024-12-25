@@ -14,14 +14,10 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public String toString() {
-        return super.toString();
-    }
+    public String textValue() {return getClass().getSimpleName();}
 
     @Override
-    public PieceType type() {
-        return PieceType.BISHOP;
-    }
+    public PieceType type() {return PieceType.BISHOP;}
 
     public boolean isValidMove(Move move, Board board) {
         // Cannot go through obstacles

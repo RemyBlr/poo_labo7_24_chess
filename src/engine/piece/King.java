@@ -14,6 +14,9 @@ public class King extends MovableOncePiece {
     }
 
     @Override
+    public String textValue() {return getClass().getSimpleName();}
+
+    @Override
     public PieceType type() {
         return PieceType.KING;
     }

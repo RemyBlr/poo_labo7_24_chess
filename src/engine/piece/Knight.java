@@ -13,9 +13,7 @@ public class Knight extends Piece {
     }
 
     @Override
-    public String toString() {
-        return super.toString();
-    }
+    public String textValue() {return getClass().getSimpleName();}
 
     @Override
     public PieceType type() {

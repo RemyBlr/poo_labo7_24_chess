@@ -6,7 +6,6 @@ import engine.Board;
 import engine.Move;
 import engine.Position;
 import chess.ChessView;
-import engine.PromotionChoice;
 
 public class Pawn extends MovableOncePiece {
     private boolean isEnPassant;
@@ -54,9 +53,10 @@ public class Pawn extends MovableOncePiece {
     }
 
     @Override
-    public PieceType type() {
-        return PieceType.PAWN;
-    }
+    public String textValue() {return getClass().getSimpleName();}
+
+    @Override
+    public PieceType type() {return PieceType.PAWN;}
 
     //TODO
     @Override
@@ -151,28 +151,25 @@ public class Pawn extends MovableOncePiece {
         // handle promotion
         if (isPromotion) {
             // ask user
-            PromotionChoice[] choices = PromotionChoice.values();
-            PromotionChoice userChoice = view.askUser(
-                    "Promotion",
-                    "Choose a piece to promote to:",
-                    choices
-            );
-
-            // new piece
-            Piece newPiece = switch (userChoice) {
-                case QUEEN -> new Queen(color(), move.to());
-                case ROOK -> new Rook(color(), move.to());
-                case BISHOP -> new Bishop(color(), move.to());
-                case KNIGHT -> new Knight(color(), move.to());
-            };
+            Piece userChoice = null;
+            while(userChoice == null) {
+                userChoice = view.askUser(
+                        "Promotion",
+                        "Choose a piece to promote to:",
+                        new Bishop(color(), move.to()),
+                        new Knight(color(), move.to()),
+                        new Rook(color(), move.to()),
+                        new Queen(color(), move.to())
+                );
+            }
 
             // remove pawn from board
             board.removePiece(move.to());
             view.removePiece(move.to().x(), move.to().y());
 
             // place new piece
-            board.getBoardPieces()[move.to().x()][move.to().y()] = newPiece;
-            view.putPiece(newPiece.type(), newPiece.color(), move.to().x(), move.to().y());
+            board.getBoardPieces()[move.to().x()][move.to().y()] = userChoice;
+            view.putPiece(userChoice.type(), userChoice.color(), move.to().x(), move.to().y());
         }
     }
 }

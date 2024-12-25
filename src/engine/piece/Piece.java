@@ -10,7 +10,7 @@ import chess.ChessView;
 /*
 ...
  */
-public abstract class Piece {
+public abstract class Piece implements ChessView.UserChoice{
     PlayerColor color;
     Position pos;
 
@@ -20,10 +20,6 @@ public abstract class Piece {
     }
 
     public Position pos() { return this.pos; }
-
-    public String toString() {
-        return this.getClass().getSimpleName();
-    }
 
     public PlayerColor color() {return color;}
 

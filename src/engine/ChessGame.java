@@ -12,7 +12,6 @@ public class ChessGame implements ChessController {
     private Board board;
     private boolean isGameOver;
     private PlayerColor currentPlayerColor;
-    private Move lastMove = new Move(new Position(-1,-1), new Position(-1,-1));
 
     @Override
     public void start(ChessView view) {
@@ -64,7 +63,7 @@ public class ChessGame implements ChessController {
 
         // Check if the move is valid for the piece type
         if(!pieceFrom.isValidMove(move, board)) {
-            view.displayMessage(pieceFrom + " can't move to this position");
+            view.displayMessage(pieceFrom.type() + " can't move to this position");
             return false;
         }
 
@@ -83,7 +82,7 @@ public class ChessGame implements ChessController {
             return false;
         }
 
-        pieceFrom.executeMove(move, board, view, lastMove);
+        pieceFrom.executeMove(move, board, view, board.getLastMove());
 
         pieceFrom.afterMove();
 
@@ -206,8 +205,8 @@ public class ChessGame implements ChessController {
      * @param move: the last move
      */
     private void finalizeMove(Move move) {
-        board.setLastMove(move); // save last move for checks
         currentPlayerColor = (currentPlayerColor == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
         view.displayMessage("It's " + currentPlayerColor + "'s turn");
+        board.setLastMove(move); // save last move for checks
     }
 }
