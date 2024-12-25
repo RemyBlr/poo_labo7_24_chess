@@ -21,8 +21,9 @@ public class Bishop extends Piece {
 
     public boolean isValidMove(Move move, Board board) {
         // Cannot go through obstacles
-        if (!MoveUtils.isDiagonalMove(move)) return false;
+        //if (!MoveUtils.isDiagonalMove(move)) return false;
 
-        return MoveUtils.isClearPathDiagonal(move, board);
+        return MoveUtils.isClearPathDiagonal(move, board) &&
+                MoveUtils.isDiagonalMove(move);
     }
 }

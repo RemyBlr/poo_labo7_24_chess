@@ -21,10 +21,12 @@ public class Queen extends Piece {
 
     public boolean isValidMove(Move move, Board board) {
 
-        if(!MoveUtils.isDiagonalMove(move) && !MoveUtils.isStraightMove(move)) return false;
+        //if(!MoveUtils.isDiagonalMove(move) && !MoveUtils.isStraightMove(move)) return false;
 
-        if(!MoveUtils.isClearPathStraight(move, board)) return false;
+        //if(!MoveUtils.isClearPathStraight(move, board)) return false;
 
-        return true;
+        return MoveUtils.isClearPathDiagonal(move, board) &&
+                MoveUtils.isDiagonalMove(move) ||
+                MoveUtils.isStraightMove(move);
     }
 }

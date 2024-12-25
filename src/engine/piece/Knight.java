@@ -27,9 +27,9 @@ public class Knight extends Piece {
 
     @Override
     public boolean isValidMove(Move move, Board board) {
-        if(!isLMove(move)) {
+        /*if(!isLMove(move)) {
             return false;
-        }
-        return true;
+        }*/
+        return isLMove(move);
     }
 }
