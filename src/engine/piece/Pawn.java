@@ -5,6 +5,7 @@ import chess.PlayerColor;
 import engine.Board;
 import engine.Move;
 import engine.Position;
+import chess.ChessView;
 
 public class Pawn extends MovableOncePiece {
     private boolean isEnPassant;
@@ -52,14 +53,16 @@ public class Pawn extends MovableOncePiece {
     }
 
     @Override
-    public PieceType type() {
-        return PieceType.PAWN;
-    }
+    public String textValue() {return getClass().getSimpleName();}
+
+    @Override
+    public PieceType type() {return PieceType.PAWN;}
 
     //TODO
     @Override
-    public boolean isValidMove(Move move, Board board, Move lastMove) {
+    public boolean isValidMove(Move move, Board board) {
         Position from = move.from(), to = move.to();
+        Move lastMove = board.getLastMove();
 
         // 1 go up, -1 go down
         int direction = (color() == PlayerColor.WHITE) ? 1 : -1;
@@ -68,6 +71,7 @@ public class Pawn extends MovableOncePiece {
         if (board.getPiece(to) == null &&  // empty space
                 from.x() == to.x() &&          // not horizontal
                 to.y() == from.y() + direction) {  // one square
+
             checkPromotion(to); // could be promotion on normal move
             setHasMoved();
             return true;
@@ -100,14 +104,14 @@ public class Pawn extends MovableOncePiece {
             }
 
             // en passant
-            // true if pawn next to landing position
-            if(lastMove != null || lastMove.to() != null && lastMove.from() != null) { // Ajout check null
+            if(lastMove != null) {
 
-                boolean hasEnemyPawnNext = board.getPiece(new Position(lastMove.to().x() - 1, lastMove.to().y())) != null ||
-                        board.getPiece(new Position(lastMove.to().x() + 1, lastMove.to().y())) != null;
-                Position lastMoveFrom = lastMove.from();
-                Position lastMoveTo = lastMove.to();
-                Piece lastMoved = board.getPiece(lastMoveTo);
+                Piece lastMoved = board.getPiece(lastMove.to());
+                Position leftDiagonal = new Position(lastMove.to().x() - 1, lastMove.to().y());
+                Position rightDiagonal = new Position(lastMove.to().x() + 1, lastMove.to().y());
+
+                // true if pawn next to landing position
+                boolean hasEnemyPawnNext = board.getPiece(leftDiagonal) != null || board.getPiece(rightDiagonal) != null;
 
                 // last move from enemy pawn has to be 2 squares and land right next to our pawn
                 if (board.getPiece(to) == null &&
@@ -115,7 +119,7 @@ public class Pawn extends MovableOncePiece {
                         hasEnemyPawnNext) {
 
                     Piece moved = board.getPiece(new Position(lastMove.to().x(), lastMove.to().y()));
-                    this.setEnPassant(true);
+                    setEnPassant(true);
                     // enemy pawn
                     return moved.type() == PieceType.PAWN && moved.color() != color() && lastMove.to().x() == to.x() && lastMove.to().y() == from.y();
                 }
@@ -123,5 +127,49 @@ public class Pawn extends MovableOncePiece {
         }
 
         return false;
+    }
+
+    @Override
+    public void executeMove(Move move, Board board, ChessView view, Move lastMove) {
+
+        // basic movement on board
+        board.movePiece(move);
+        view.removePiece(move.from().x(), move.from().y());
+        view.putPiece(this.type(), this.color(), move.to().x(), move.to().y());
+
+        // handle en passant
+        if (isEnPassant) {
+            int direction = (color() == PlayerColor.WHITE) ? 1 : -1;
+            Position capturedPos = new Position(move.to().x(), move.to().y() - direction);
+
+            board.removePiece(capturedPos);
+            view.removePiece(capturedPos.x(), capturedPos.y());
+
+            setEnPassant(false); // reset
+        }
+
+        // handle promotion
+        if (isPromotion) {
+            // ask user
+            Piece userChoice = null;
+            while(userChoice == null) {
+                userChoice = view.askUser(
+                        "Promotion",
+                        "Choose a piece to promote to:",
+                        new Bishop(color(), move.to()),
+                        new Knight(color(), move.to()),
+                        new Rook(color(), move.to()),
+                        new Queen(color(), move.to())
+                );
+            }
+
+            // remove pawn from board
+            board.removePiece(move.to());
+            view.removePiece(move.to().x(), move.to().y());
+
+            // place new piece
+            board.getBoardPieces()[move.to().x()][move.to().y()] = userChoice;
+            view.putPiece(userChoice.type(), userChoice.color(), move.to().x(), move.to().y());
+        }
     }
 }

@@ -1,7 +1,5 @@
 package engine;
 
-import engine.piece.Piece;
-
 public class Position {
     private int x;
     private int y;
@@ -34,6 +32,10 @@ public class Position {
 
     public boolean isInsideBoard() {
         return x >= 0 && x < 8 && y >= 0 && y < 8;
+    }
+
+    public boolean equals(Position other) {
+        return (this.x() == other.x() && this.y() == other.y());
     }
 
     public String toString() {

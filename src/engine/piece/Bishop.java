@@ -13,39 +13,14 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public String toString() {
-        return super.toString();
-    }
+    public String textValue() {return getClass().getSimpleName();}
 
     @Override
-    public PieceType type() {
-        return PieceType.BISHOP;
-    }
+    public PieceType type() {return PieceType.BISHOP;}
 
-    private boolean isDiagonalMove(Move move) {
-        Position from = move.from(), to = move.to();
-        return Math.abs(to.x() - from.x()) == Math.abs(to.y() - from.y());
-    }
-
-    public boolean isValidMove(Move move, Board board, Move lastMove) {
+    public boolean isValidMove(Move move, Board board) {
         // Cannot go through obstacles
-        if (!isDiagonalMove(move)) {
-            return false;
-        }
-
-        Position from = move.from(), to = move.to();
-
-        // Check if there is a piece on the path the bishop wants to go through
-        int incrX = 1, incrY = 1; // Diagonal move up-right
-        if (from.x() > to.x()) incrX = -1; // left
-        if (from.y() > to.y()) incrY = -1; // down
-
-        for (int x = from.x() + incrX, y = from.y() + incrY; x != to.x() && y != to.y(); x += incrX, y += incrY) {
-            if (board.getPiece(new Position(x, y)) != null) {
-                return false;
-            }
-        }
-
-        return true;
+        return Move.isClearPathDiagonal(move, board) &&
+                Move.isDiagonalMove(move);
     }
 }

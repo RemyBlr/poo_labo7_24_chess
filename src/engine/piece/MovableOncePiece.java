@@ -1,7 +1,6 @@
 package engine.piece;
 
 import chess.PlayerColor;
-import engine.Board;
 import engine.Position;
 
 /*
@@ -24,7 +23,7 @@ public abstract class MovableOncePiece extends Piece {
     }
 
     @Override
-    public String toString() {
-        return super.toString();
+    public void afterMove() {
+        setHasMoved();
     }
 }

@@ -2,7 +2,6 @@ package engine;
 
 import chess.ChessController;
 import chess.ChessView;
-import chess.PieceType;
 import chess.PlayerColor;
 import engine.piece.*;
 
@@ -12,7 +11,6 @@ public class ChessGame implements ChessController {
     private Board board;
     private boolean isGameOver;
     private PlayerColor currentPlayerColor;
-    private Move lastMove = new Move(new Position(-1,-1), new Position(-1,-1));
 
     @Override
     public void start(ChessView view) {
@@ -54,17 +52,16 @@ public class ChessGame implements ChessController {
         }
 
         // Cannot move a piece to the same position
-        if(from.equals(to)) {
+        if(pieceFrom.equals(pieceTo)) {
             view.displayMessage("You can't move a piece to the same position");
+            return false;
         }
 
         System.out.println("(" + from + ") -> (" + to + ") Type=" + pieceFrom.type());
 
-        // Roque déplacé dans le isValidMove de la classe King
-
         // Check if the move is valid for the piece type
-        if(!pieceFrom.isValidMove(move, board, lastMove)) {
-            view.displayMessage(pieceFrom + " can't move to this position");
+        if(!pieceFrom.isValidMove(move, board)) {
+            view.displayMessage(pieceFrom.type() + " can't move to this position");
             return false;
         }
 
@@ -81,45 +78,16 @@ public class ChessGame implements ChessController {
             return false;
         }
 
-        // Roque
-        if (pieceFrom.type() == PieceType.KING && ((King) pieceFrom).isRoquable(move, board)) {
-            // Mettre à jour le roi
-            board.movePiece(move);
-            view.removePiece(fromX, fromY);
-            view.putPiece(PieceType.KING, pieceFrom.color(), to.x(), to.y());
+        // execute move
+        pieceFrom.executeMove(move, board, view, board.getLastMove());
 
-            // Mettre à jour la tour
-            boolean small = to.x() - fromX == 2;
-            if(small) {
-                board.movePiece(new Move(new Position(7, fromY), new Position(5, fromY)));
-                view.removePiece(7, fromY);
-                view.putPiece(PieceType.ROOK, pieceFrom.color(), 5, fromY);
-            } else {
-                board.movePiece(new Move(new Position(0, fromY), new Position(3, fromY)));
-                view.removePiece(0, fromY);
-                view.putPiece(PieceType.ROOK, pieceFrom.color(), 3, fromY);
-            }
+        pieceFrom.afterMove();
 
-        } else { // Normal move
-            board.movePiece(move);
-            view.removePiece(fromX, fromY);
-            view.putPiece(pieceFrom.type(), pieceFrom.color(), to.x(), to.y());
-        }
-
-        // Où mettre ça ? Comment ne pas istanceof ça ?
-        if(pieceFrom instanceof MovableOncePiece) {
-            ((MovableOncePiece) pieceFrom).setHasMoved();
-        }
-
-        // en passant
-        doEnPassant(pieceFrom, to);
-
-        // Promotion
-        doPromotion(pieceFrom, to);
-
+        // switch player and save last move
         currentPlayerColor = (currentPlayerColor == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
         view.displayMessage("It's " + currentPlayerColor + "'s turn");
-        this.lastMove = move; // save last move for checks
+        board.setLastMove(move); // save last move for checks
+
         return true;
     }
 
@@ -146,50 +114,6 @@ public class ChessGame implements ChessController {
                     view.putPiece(piece.type(), piece.color(), x, y);
                 }
             }
-        }
-    }
-
-    /*
-     * Promote a pawn to a new piece
-     *
-     * @param pawn: the pawn to promote
-     * @param pos: the position of the pawn
-     */
-    public void doPromotion(Piece pawn,  Position pos) {
-        Piece newPiece = null;
-
-        if(((Pawn) pawn).isPromotion()) {
-
-            PromotionChoice[] possibilities = PromotionChoice.values();
-            PromotionChoice choice = view.askUser("Promotion", "Choose a piece", possibilities);
-
-            // create new piece
-            switch (choice) {
-                case QUEEN -> newPiece = new Queen(pawn.color(), pos);
-                case ROOK -> newPiece = new Rook(pawn.color(), pos);
-                case BISHOP -> newPiece = new Bishop(pawn.color(), pos);
-                case KNIGHT -> newPiece = new Knight(pawn.color(), pos);
-            }
-
-            // remove pawn and add new piece
-            board.removePiece(pos);
-            board.getBoardPieces()[pos.x()][pos.y()] = newPiece;
-
-            // update view
-            view.removePiece(pos.x(), pos.y());
-            view.putPiece(newPiece.type(), newPiece.color(), pos.x(), pos.y());
-        }
-    }
-
-    public void doEnPassant(Piece pawn, Position to) {
-        if(((Pawn) pawn).isEnPassant()) {
-            int direction = (pawn.color() == PlayerColor.WHITE) ? 1 : -1;
-            Position enemyPawnPos = new Position(to.x(), to.y() - direction);
-
-            board.removePiece(enemyPawnPos);
-            view.removePiece(enemyPawnPos.x(), enemyPawnPos.y());
-
-            ((Pawn) pawn).setEnPassant(false);
         }
     }
 }
