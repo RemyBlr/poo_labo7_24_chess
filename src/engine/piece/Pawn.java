@@ -46,10 +46,17 @@ public class Pawn extends MovableOncePiece {
     /**
      * Check if pawn is at the end of the board
      */
-    public void checkPromotion(Position to) {
+    private void checkPromotion(Position to) {
         if (color() == PlayerColor.WHITE && to.y() == 7 ||
             color() == PlayerColor.BLACK && to.y() == 0)
             setPromotion(true);
+    }
+
+    private Piece getPieceIfInside(Board board, int x, int y) {
+        if (x < 0 || x > 7 || y < 0 || y > 7) {
+            return null;
+        }
+        return board.getPiece(new Position(x, y));
     }
 
     @Override
@@ -58,11 +65,10 @@ public class Pawn extends MovableOncePiece {
     @Override
     public PieceType type() {return PieceType.PAWN;}
 
-    //TODO
     @Override
     public boolean isValidMove(Move move, Board board) {
-        Position from = move.from(), to = move.to();
         Move lastMove = board.getLastMove();
+        Position from = move.from(), to = move.to();
 
         // 1 go up, -1 go down
         int direction = (color() == PlayerColor.WHITE) ? 1 : -1;
@@ -107,11 +113,13 @@ public class Pawn extends MovableOncePiece {
             if(lastMove != null) {
 
                 Piece lastMoved = board.getPiece(lastMove.to());
-                Position leftDiagonal = new Position(lastMove.to().x() - 1, lastMove.to().y());
-                Position rightDiagonal = new Position(lastMove.to().x() + 1, lastMove.to().y());
 
                 // true if pawn next to landing position
-                boolean hasEnemyPawnNext = board.getPiece(leftDiagonal) != null || board.getPiece(rightDiagonal) != null;
+                //boolean hasEnemyPawnNext = board.getPiece(new Position(lastMove.to().x() - 1, lastMove.to().y())) != null ||
+                //        board.getPiece(new Position(lastMove.to().x() + 1, lastMove.to().y())) != null;
+                Piece leftPiece = getPieceIfInside(board, lastMove.to().x() - 1, lastMove.to().y());
+                Piece rightPiece = getPieceIfInside(board, lastMove.to().x() + 1, lastMove.to().y());
+                boolean hasEnemyPawnNext = (leftPiece != null) || (rightPiece != null);
 
                 // last move from enemy pawn has to be 2 squares and land right next to our pawn
                 if (board.getPiece(to) == null &&
