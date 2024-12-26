@@ -109,8 +109,8 @@ public class Board {
         return board[pos.x()][pos.y()];
     }
 
-    public Piece[][] getBoardPieces() {
-        return board;
+    public void setPiece(Piece piece, Position pos) {
+        board[pos.x()][pos.y()] = piece;
     }
 
     // TODO

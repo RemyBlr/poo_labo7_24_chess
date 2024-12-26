@@ -176,7 +176,7 @@ public class Pawn extends MovableOncePiece {
             view.removePiece(move.to().x(), move.to().y());
 
             // place new piece
-            board.getBoardPieces()[move.to().x()][move.to().y()] = userChoice;
+            board.setPiece(userChoice, move.to());
             view.putPiece(userChoice.type(), userChoice.color(), move.to().x(), move.to().y());
         }
     }
