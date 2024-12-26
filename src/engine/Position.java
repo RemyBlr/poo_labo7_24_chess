@@ -25,17 +25,8 @@ public class Position {
         this.y = y;
     }
 
-    public void setXY(int x, int y) {
-        setX(x);
-        setY(y);
-    }
-
     public boolean isInsideBoard() {
         return x >= 0 && x < 8 && y >= 0 && y < 8;
-    }
-
-    public boolean equals(Position other) {
-        return (this.x() == other.x() && this.y() == other.y());
     }
 
     public String toString() {

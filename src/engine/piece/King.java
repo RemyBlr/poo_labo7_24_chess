@@ -39,7 +39,6 @@ public class King extends MovableOncePiece {
 
         // Ne peut se déplacer que d'une case
         if (Math.abs(to.x() - from.x()) > 1 || Math.abs(to.y() - from.y()) > 1) {
-            System.out.println("1 case only for the king."); // Pourquoi on rentre ici même si le roi avance de 1 ?
             return false;
         }
 
@@ -48,7 +47,6 @@ public class King extends MovableOncePiece {
 
     @Override
     public void executeMove(Move move, Board board, ChessView view, Move lastMove) {
-
         // check if castling move
         if (isRoquable(move, board)) {
 
@@ -116,7 +114,6 @@ public class King extends MovableOncePiece {
             // Petit roque
             if (small) {
                 Piece rook = board.getPiece(new Position(7, from.y()));
-                System.out.println("Rook: " + rook);
                 if (rook != null && rook instanceof Rook r && !r.hasMoved()) {
                     return true;
                 }
