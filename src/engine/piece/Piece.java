@@ -45,4 +45,8 @@ public abstract class Piece implements ChessView.UserChoice{
      * Default implementation does nothing.
      */
     public void afterMove() {}
+
+    public boolean canBeCapturedEnPassant() {
+        return false; // par défaut, toute pièce retourne false
+    }
 }

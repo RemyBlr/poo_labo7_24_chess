@@ -19,8 +19,7 @@ public class Queen extends Piece {
     public PieceType type() {return PieceType.QUEEN;}
 
     public boolean isValidMove(Move move, Board board) {
-        return Move.isClearPathDiagonal(move, board) &&
-                Move.isDiagonalMove(move) ||
-                Move.isStraightMove(move);
+        return Move.isClearPathDiagonal(move, board) && Move.isStraightMove(move) ||
+        Move.isClearPathStraight(move, board) && Move.isDiagonalMove(move);
     }
 }

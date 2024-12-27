@@ -66,6 +66,13 @@ public class Pawn extends MovableOncePiece {
     public PieceType type() {return PieceType.PAWN;}
 
     @Override
+    public boolean canBeCapturedEnPassant() {
+        // un pion peut être capturable en passant seulement
+        // s’il vient de faire un double pas
+        return wasDoublePawnMove();
+    }
+
+    @Override
     public boolean isValidMove(Move move, Board board) {
         Move lastMove = board.getLastMove();
         Position from = move.from(), to = move.to();
@@ -123,7 +130,7 @@ public class Pawn extends MovableOncePiece {
 
                 // last move from enemy pawn has to be 2 squares and land right next to our pawn
                 if (board.getPiece(to) == null &&
-                        ((Pawn) lastMoved).wasDoublePawnMove() &&
+                        lastMoved.canBeCapturedEnPassant() &&
                         hasEnemyPawnNext) {
 
                     Piece moved = board.getPiece(new Position(lastMove.to().x(), lastMove.to().y()));
