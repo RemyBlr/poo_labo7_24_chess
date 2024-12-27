@@ -67,8 +67,7 @@ public class Pawn extends MovableOncePiece {
 
     @Override
     public boolean canBeCapturedEnPassant() {
-        // un pion peut être capturable en passant seulement
-        // s’il vient de faire un double pas
+        // after promotion, will return false
         return wasDoublePawnMove();
     }
 

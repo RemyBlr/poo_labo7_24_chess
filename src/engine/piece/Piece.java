@@ -47,6 +47,6 @@ public abstract class Piece implements ChessView.UserChoice{
     public void afterMove() {}
 
     public boolean canBeCapturedEnPassant() {
-        return false; // par défaut, toute pièce retourne false
+        return false; // every piece except pawn
     }
 }
