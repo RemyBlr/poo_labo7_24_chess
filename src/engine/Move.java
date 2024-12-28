@@ -16,6 +16,11 @@ public class Move {
         return to;
     }
 
+    public Move inverse()
+    {
+        return new Move(to, from);
+    }
+
     public String toString() {
         return "fromX : " + from.x() +
                 " fromY : " + from.y() +
@@ -38,9 +43,9 @@ public class Move {
         int incrY = Integer.compare(to.y(), from.y());
 
         for (int x = from.x() + incrX, y = from.y() + incrY; x != to.x() || y != to.y(); x += incrX, y += incrY) {
-            if (board.getPiece(new Position(x, y)) != null) return false;
+            Position p = new Position(x, y);
+            if (!p.isInsideBoard() || board.getPiece(p) != null) return false;
         }
-
         return true;
     }
 
@@ -53,9 +58,8 @@ public class Move {
         if (from.y() > to.y()) incrY = -1; // down
 
         for (int x = from.x() + incrX, y = from.y() + incrY; x != to.x() && y != to.y(); x += incrX, y += incrY) {
-            if (board.getPiece(new Position(x, y)) != null) {
-                return false;
-            }
+            Position p = new Position(x, y);
+            if (!p.isInsideBoard() || board.getPiece(p) != null) return false;
         }
         return true;
     }

@@ -7,6 +7,8 @@ import engine.Board;
 import engine.Move;
 import engine.Position;
 
+import java.util.HashSet;
+
 public class King extends MovableOncePiece {
 
     public King(PlayerColor color, Position pos) {
@@ -26,12 +28,13 @@ public class King extends MovableOncePiece {
         Position from = move.from(), to = move.to();
         Move lastMove = board.getLastMove();
 
+        /*
         // Ne peut pas se mettre en échec tout seul
         if (isChecked(board, lastMove)) {
             System.out.println("King is checked.");
             return false;
         }
-
+        */
         // Roque (petit ou grand)
         if(isRoquable(move, board)) {
             return true;
@@ -39,7 +42,7 @@ public class King extends MovableOncePiece {
 
         // Ne peut se déplacer que d'une case
         if (Math.abs(to.x() - from.x()) > 1 || Math.abs(to.y() - from.y()) > 1) {
-            System.out.println("1 case only for the king."); // Pourquoi on rentre ici même si le roi avance de 1 ?
+            //System.out.println("1 case only for the king."); // Pourquoi on rentre ici même si le roi avance de 1 ?
             return false;
         }
 
@@ -86,18 +89,17 @@ public class King extends MovableOncePiece {
     }
 
     //TODO
-    public boolean isChecked(Board board, Move lastMove) {
-        /*
-        Move hypotheticalMove;
-        PlayerColor enemyColor = color.equals(PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
-        HashSet<Piece> enemyPieces = board.getPlayerPieces(enemyColor);
-        for (Piece enemy : enemyPieces) {
-            hypotheticalMove = new Move(new Position(enemy.pos().x(), enemy.pos().y()), this.pos);
-            if (enemy.isValidMove(hypotheticalMove, board, lastMove)) {
+    public boolean isChecked(Board board) {
+        Piece piece;
+        for(int x = 0; x < 8; x++) {
+            for(int y = 0; y < 8; y++) {
+                piece = board.getPiece(new Position(x,y));
+                if(piece == null || piece.color() == this.color) continue;
+                if(!piece.isValidMove(new Move(piece.pos(), pos), board)) continue;
+                System.out.println(color.name() + " checked by " + piece.type().name());
                 return true;
             }
         }
-        */
         return false;
     }
 

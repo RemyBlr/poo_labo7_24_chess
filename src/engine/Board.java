@@ -8,6 +8,9 @@ public class Board {
     private Piece[][] board;
     private Move lastMove;
 
+    private King whiteKing;
+    private King blackKing;
+
     public Board() {
         this.board = new Piece[BOARD_SIZE][BOARD_SIZE];
         this.lastMove = null;
@@ -71,8 +74,10 @@ public class Board {
     }
 
     public void setKings() {
-        addPiece(new King(PlayerColor.WHITE, new Position(4, 0)));
-        addPiece(new King(PlayerColor.BLACK, new Position(4, 7)));
+        whiteKing = new King(PlayerColor.WHITE, new Position(4, 0));
+        addPiece(whiteKing);
+        blackKing = new King(PlayerColor.BLACK, new Position(4, 7));
+        addPiece(blackKing);
     }
 
     public void setEmptySquares() {
@@ -121,5 +126,9 @@ public class Board {
     // TODO
     public boolean isStaleMate() {
         return false;
+    }
+
+    public King getKing(PlayerColor color) {
+        return color == PlayerColor.WHITE ? whiteKing : blackKing;
     }
 }

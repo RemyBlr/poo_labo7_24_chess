@@ -38,6 +38,10 @@ public class Position {
         return (this.x() == other.x() && this.y() == other.y());
     }
 
+    public Position add(Position other){
+        return new Position( this.x + other.x(), this.y + other.y());
+    }
+
     public String toString() {
         return "(" + x + ", " + y + ")";
     }
