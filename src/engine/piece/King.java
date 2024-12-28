@@ -27,8 +27,7 @@ public class King extends MovableOncePiece {
         Move lastMove = board.getLastMove();
 
         // Ne peut pas se mettre en échec tout seul
-        if (isChecked(board, lastMove)) {
-            System.out.println("King is checked.");
+        if (simulateKingMoveAndCheck(board, move)) {
             return false;
         }
 
@@ -85,19 +84,25 @@ public class King extends MovableOncePiece {
         }
     }
 
-    //TODO
-    public boolean isChecked(Board board, Move lastMove) {
-        /*
-        Move hypotheticalMove;
-        PlayerColor enemyColor = color.equals(PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
-        HashSet<Piece> enemyPieces = board.getPlayerPieces(enemyColor);
-        for (Piece enemy : enemyPieces) {
-            hypotheticalMove = new Move(new Position(enemy.pos().x(), enemy.pos().y()), this.pos);
-            if (enemy.isValidMove(hypotheticalMove, board, lastMove)) {
-                return true;
-            }
+    public boolean simulateKingMoveAndCheck(Board board, Move move) {
+        Position from = move.from(), to = move.to();
+        Piece captured = board.getPiece(to);
+        Piece king = board.getPiece(from);
+
+        // temporarily move King
+        board.simulateMove(move);
+
+        // check if color is in check
+        if (board.isCheck(king.color())) {
+            // cancel move
+            board.undoMove(move, captured);
+            //view.displayMessage("You can't move into check");
+            return true;
         }
-        */
+
+        // restore board
+        board.undoMove(move, captured);
+
         return false;
     }
 

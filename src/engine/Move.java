@@ -37,7 +37,19 @@ public class Move {
         int incrX = Integer.compare(to.x(), from.x());
         int incrY = Integer.compare(to.y(), from.y());
 
-        for (int x = from.x() + incrX, y = from.y() + incrY; x != to.x() || y != to.y(); x += incrX, y += incrY) {
+        /*for (int x = from.x() + incrX, y = from.y() + incrY; x != to.x() || y != to.y(); x += incrX, y += incrY) {
+            if (board.getPiece(new Position(x, y)) != null) return false;
+        }*/
+
+        for (int x = from.x() + incrX, y = from.y() + incrY; ; x += incrX, y += incrY) {
+
+            // stop when we reach destination
+            if (x == to.x() && y == to.y()) break;
+
+            // check if inside board
+            if (x < 0 || x > 7 || y < 0 || y > 7) return false;
+
+            // not occupied
             if (board.getPiece(new Position(x, y)) != null) return false;
         }
 

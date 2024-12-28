@@ -1,5 +1,6 @@
 package engine;
 
+import chess.PieceType;
 import chess.PlayerColor;
 import engine.piece.*;
 
@@ -97,6 +98,18 @@ public class Board {
         board[from.x()][from.y()] = null;
     }
 
+    public void simulateMove(Move move) {
+        Piece moving = board[move.from().x()][move.from().y()];
+        board[move.to().x()][move.to().y()] = moving;
+        board[move.from().x()][move.from().y()] = null;
+    }
+
+    public void undoMove(Move move, Piece captured) {
+        Piece moving = board[move.to().x()][move.to().y()];
+        board[move.from().x()][move.from().y()] = moving;
+        board[move.to().x()][move.to().y()] = captured;
+    }
+
     public void setLastMove(Move move) {
         this.lastMove = move;
     }
@@ -111,6 +124,43 @@ public class Board {
 
     public void setPiece(Piece piece, Position pos) {
         board[pos.x()][pos.y()] = piece;
+    }
+
+    public boolean isCheck(PlayerColor color) {
+        // find king position
+        Position kingPos = findKing(color);
+        System.out.println("King position: " + kingPos);
+
+        // check if attacked by enemy pieces
+        PlayerColor enemyColor = (color == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
+
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                Piece enemyPiece = board[x][y];
+                if (enemyPiece != null && enemyPiece.color() == enemyColor) {
+                    Move hypotheticalMove = new Move(new Position(x, y), kingPos);
+
+                    if (enemyPiece.isValidMove(hypotheticalMove, this)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private Position findKing(PlayerColor color) {
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                Piece piece = board[x][y];
+                if (piece != null
+                        && piece.type() == PieceType.KING
+                        && piece.color() == color) {
+                    return new Position(x, y);
+                }
+            }
+        }
+        return null; // no king found, should never happen
     }
 
     // TODO
