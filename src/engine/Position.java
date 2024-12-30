@@ -34,12 +34,26 @@ public class Position {
         return x >= 0 && x < 8 && y >= 0 && y < 8;
     }
 
-    public boolean equals(Position other) {
-        return (this.x() == other.x() && this.y() == other.y());
-    }
-
     public Position add(Position other){
         return new Position( this.x + other.x(), this.y + other.y());
+    }
+
+    public Position mul(int scalar){
+        return new Position( this.x * scalar, this.y * scalar);
+    }
+
+    public Position directionTo(Position other){
+        int dx = Integer.compare(other.x(), this.x); // Renvoie -1, 0 ou 1
+        int dy = Integer.compare(other.y(), this.y); // Renvoie -1, 0 ou 1
+        return new Position(dx, dy);
+    }
+
+    public int distance(Position other) {
+        return Math.max(Math.abs(other.x() - x),Math.abs(other.y() - y));
+    }
+
+    public boolean equals(Position other) {
+        return (this.x() == other.x() && this.y() == other.y());
     }
 
     public String toString() {

@@ -88,8 +88,24 @@ public class King extends MovableOncePiece {
         }
     }
 
+    public Piece getCheckerPiece(Board board) {
+        Piece piece;
+        for(int x = 0; x < 8; x++) {
+            for(int y = 0; y < 8; y++) {
+                piece = board.getPiece(new Position(x,y));
+                if(piece == null || piece.color() == this.color) continue;
+                if(!piece.isValidMove(new Move(piece.pos(), pos), board)) continue;
+                return piece;
+            }
+        }
+        return null;
+    }
+
     //TODO
     public boolean isChecked(Board board) {
+
+        return getCheckerPiece(board) != null;
+        /*
         Piece piece;
         for(int x = 0; x < 8; x++) {
             for(int y = 0; y < 8; y++) {
@@ -101,6 +117,7 @@ public class King extends MovableOncePiece {
             }
         }
         return false;
+        */
     }
 
     // TODO
