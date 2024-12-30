@@ -131,4 +131,15 @@ public class Board {
     public King getKing(PlayerColor color) {
         return color == PlayerColor.WHITE ? whiteKing : blackKing;
     }
+
+    public int getPlayerPieceCount(PlayerColor color) {
+        int count = 0;
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                if(board[x][y] == null) continue;
+                count += board[x][y].color() == color ? 1 : 0;
+            }
+        }
+        return count;
+    }
 }

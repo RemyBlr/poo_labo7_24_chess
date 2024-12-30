@@ -89,8 +89,7 @@ public class ChessGame implements ChessController {
         view.displayMessage("It's " + currentPlayerColor + "'s turn");
         board.setLastMove(move); // save last move for checks
 
-        if (isCheckMate() || board.isStaleMate()) {
-            System.out.println("ENDGAME !");
+        if (isCheckMate() || isStaleMate()) {
             isGameOver = true;
             view.displayMessage("Game over");
             newGame();
@@ -104,13 +103,18 @@ public class ChessGame implements ChessController {
         return board.getKing(currentPlayerColor);
     }
 
+    private boolean isStaleMate() {
+        if(getPlayerKing().isChecked(board)) return false;
+        if(board.getPlayerPieceCount(PlayerColor.WHITE) == 1 && board.getPlayerPieceCount(PlayerColor.BLACK) == 1) return true;
+        if(board.getPlayerPieceCount(currentPlayerColor) != 1) return false;
+        return hasKingValidMoves();
+    }
+
     private boolean isKingChecked(Piece pieceFrom, Move move)
     {
         boolean isChecked = getPlayerKing().isChecked(board);
-        System.out.println("King " + getPlayerKing().color().name() + " is checked ? : " + isChecked);
         if(isChecked)
         {
-            System.out.println("rollbackNeeded !");
             //RollBack
             view.displayMessage("Rollback");
             rollback(pieceFrom, move);
@@ -122,7 +126,6 @@ public class ChessGame implements ChessController {
     private void rollback(Piece lastPieceMoved, Move move) {
         lastPieceMoved.executeMove(move.inverse(), board, view, board.getLastMove());
         if(lastPieceCaptured != null) {
-            //System.out.println("rollback ! lastPieceCaptured = " + lastPieceCaptured.type().name() + " at : " + lastPieceCaptured.pos());
             board.setPiece(lastPieceCaptured, move.to());
             view.putPiece(lastPieceCaptured.type(), lastPieceCaptured.color(), lastPieceCaptured.pos().x(), lastPieceCaptured.pos().y());
         }
@@ -162,36 +165,29 @@ public class ChessGame implements ChessController {
         Move simulationMove = new Move(from, to);
         Piece pieceTo = board.getPiece(to);
 
-        if(pieceTo != null && king.color().equals(pieceTo.color())) { // J'ai du mettre après le isValidMove car le roi ne peut pas roque sinon
-            //view.displayMessage("isKingValidMove: You can't eat your own piece (" + pieceTo.type().name() + ")");
-            System.out.println("isKingValidMove: You can't eat your own piece (" + pieceTo.type().name() + ")");
-            return false;
-        }
-
+        if(pieceTo != null && king.color().equals(pieceTo.color())) return false;
+        
         //register piece Captured
         lastPieceCaptured = pieceTo;
-        if(lastPieceCaptured != null){
-            System.out.println("isKingValidMove lastPieceCaptured = " + lastPieceCaptured.type().name());
-        }
+
         // execute move
         king.executeMove(simulationMove, board, view, board.getLastMove());
         king.afterMove();
         boolean validMove = !king.isChecked(board);
         rollback(king, simulationMove);
-        //System.out.println("rollback ! valid = " + validMove);
         return validMove;
     }
 
     private boolean isCheckMate() {
+        if(!getPlayerKing().isChecked(board)) return false;
         if(hasKingValidMoves()) return false;
         return checkMateTest();
     }
 
     //check tout les move possible du roi uniquement!
-    private boolean hasKingValidMoves()
-    {
+    private boolean hasKingValidMoves() {
         King king = getPlayerKing();
-        if(!king.isChecked(board)) return false;
+        //if(!king.isChecked(board)) return false;
         Position[] moves = {
                 king.pos().add(new Position(0,1)), //top
                 king.pos().add(new Position(1,1)), //top-right
@@ -217,38 +213,21 @@ public class ChessGame implements ChessController {
 
         if(checker == null) return false;
 
-        if(canEatPiece(checker.color(), checker.pos())) {
-            return false;
-        }
+        //check si on peut tuer l'attaquant
+        if(checkAnyAllyPieceValidMove(getPlayerKing().color(), checker.pos())) return false;
+
         //aucune pièce allié ne peut manger le méchant donc tout est perdu (les moves du roi ayant été testé avant)
         if(getPlayerKing().pos().distance(checker.pos()) == 1 || checker.type() == PieceType.KNIGHT) return true;
 
         Position[] posToCheck = getPositionInBetween(checker.pos(), getPlayerKing().pos());
-
         for (Position pos : posToCheck) {
-            if(checkValidMoveAtPos(getPlayerKing().color(), pos)) continue;
+            if(checkAnyAllyPieceValidMove(getPlayerKing().color(), pos)) continue;
             return false;
         }
-
         return true;
     }
 
-    //check si un allié peut tuer la pièce qui attaque le roi
-    private boolean canEatPiece(PlayerColor enemyColor, Position enemyPosition) {
-        Piece allyPiece;
-        for(int x = 0; x < 8; x++) {
-            for(int y = 0; y < 8; y++) {
-                allyPiece = board.getPiece(new Position(x,y));
-                if(allyPiece == null || allyPiece.color() == enemyColor || allyPiece.type() == PieceType.KING) continue;
-                if(!allyPiece.isValidMove(new Move(allyPiece.pos(), enemyPosition), board)) continue;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    //On check les case entre le roi et son attaquant
-    private boolean checkValidMoveAtPos(PlayerColor allyColor, Position pos) {
+    private boolean checkAnyAllyPieceValidMove(PlayerColor allyColor, Position pos) {
         Piece allyPiece;
         for(int x = 0; x < 8; x++) {
             for(int y = 0; y < 8; y++) {
@@ -264,12 +243,11 @@ public class ChessGame implements ChessController {
     //on prend les case entre le roi et l'attaquant
     private Position[] getPositionInBetween(Position from, Position to) {
         Position[] positions = new Position[Math.max(from.distance(to) - 1,0)];
-        if(positions.length < 1) return positions;
-
-        Position direction = from.directionTo(to);
-
-        for (int i = 0; i < positions.length; i++) {
-            positions[i] = from.add(direction.mul(i + 1));
+        if(positions.length >= 1) {
+            Position direction = from.directionTo(to);
+            for (int i = 0; i < positions.length; i++) {
+                positions[i] = from.add(direction.mul(i + 1));
+            }
         }
         return positions;
     }
