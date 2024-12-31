@@ -19,10 +19,6 @@ public class Pawn extends MovableOncePiece {
         this.isPromotion = false;
     }
 
-    public boolean isEnPassant() {
-        return isEnPassant;
-    }
-
     public void setEnPassant(boolean enPassant) {
         isEnPassant = enPassant;
     }
@@ -33,10 +29,6 @@ public class Pawn extends MovableOncePiece {
 
     public void setDoublePawnMove(boolean doublePawnMove) {
         this.doublePawnMove = doublePawnMove;
-    }
-
-    public boolean isPromotion() {
-        return isPromotion;
     }
 
     public void setPromotion(boolean promotion) {
@@ -75,17 +67,15 @@ public class Pawn extends MovableOncePiece {
     public boolean isValidMove(Move move, Board board) {
         Move lastMove = board.getLastMove();
         Position from = move.from(), to = move.to();
+        Piece destination = board.getPiece(to);
 
         // 1 go up, -1 go down
         int direction = (color() == PlayerColor.WHITE) ? 1 : -1;
 
         // Move one square
-        if (board.getPiece(to) == null &&  // empty space
-                from.x() == to.x() &&          // not horizontal
+        if (destination == null &&      // empty space
+                from.x() == to.x() &&   // not horizontal
                 to.y() == from.y() + direction) {  // one square
-
-            checkPromotion(to); // could be promotion on normal move
-            setHasMoved();
             return true;
         }
 
@@ -98,9 +88,6 @@ public class Pawn extends MovableOncePiece {
             Piece squareInFrontPawn = board.getPiece(temp);
             Piece destinationSquare = board.getPiece(to);
 
-            setHasMoved();
-            setDoublePawnMove(true);
-
             // both square in front of pawn are empty
             return squareInFrontPawn == null && destinationSquare == null;
         }
@@ -110,8 +97,7 @@ public class Pawn extends MovableOncePiece {
                 to.y() == from.y() + direction) {  // one forward
 
             // true if enemy piece and not empty
-            if (board.getPiece(to) != null && board.getPiece(to).color() != color()) {
-                checkPromotion(to); // could be promotion on capture
+            if (destination != null && destination.color() != color()) {
                 return true;
             }
 
@@ -120,22 +106,14 @@ public class Pawn extends MovableOncePiece {
 
                 Piece lastMoved = board.getPiece(lastMove.to());
 
-                // true if pawn next to landing position
-                //boolean hasEnemyPawnNext = board.getPiece(new Position(lastMove.to().x() - 1, lastMove.to().y())) != null ||
-                //        board.getPiece(new Position(lastMove.to().x() + 1, lastMove.to().y())) != null;
-                Piece leftPiece = getPieceIfInside(board, lastMove.to().x() - 1, lastMove.to().y());
-                Piece rightPiece = getPieceIfInside(board, lastMove.to().x() + 1, lastMove.to().y());
-                boolean hasEnemyPawnNext = (leftPiece != null) || (rightPiece != null);
-
                 // last move from enemy pawn has to be 2 squares and land right next to our pawn
                 if (board.getPiece(to) == null &&
                         lastMoved.canBeCapturedEnPassant() &&
-                        hasEnemyPawnNext) {
+                        lastMoved.color() != color()){
 
-                    Piece moved = board.getPiece(new Position(lastMove.to().x(), lastMove.to().y()));
-                    setEnPassant(true);
-                    // enemy pawn
-                    return moved.type() == PieceType.PAWN && moved.color() != color() && lastMove.to().x() == to.x() && lastMove.to().y() == from.y();
+                    // must be next to us
+                    // check if lastMove.to() is exactly behind the "to" spot
+                    return lastMove.to().x() == to.x() && lastMove.to().y() == from.y();
                 }
             }
         }
@@ -145,6 +123,12 @@ public class Pawn extends MovableOncePiece {
 
     @Override
     public void executeMove(Move move, Board board, ChessView view, Move lastMove) {
+        Position from = move.from();
+        Position to   = move.to();
+        int direction = (color() == PlayerColor.WHITE) ? 1 : -1;
+
+        // if two-square move
+        setDoublePawnMove(!hasMoved() && Math.abs(to.y() - from.y()) == 2);
 
         // basic movement on board
         board.movePiece(move);
@@ -152,15 +136,22 @@ public class Pawn extends MovableOncePiece {
         view.putPiece(this.type(), this.color(), move.to().x(), move.to().y());
 
         // handle en passant
-        if (isEnPassant) {
-            int direction = (color() == PlayerColor.WHITE) ? 1 : -1;
-            Position capturedPos = new Position(move.to().x(), move.to().y() - direction);
+        boolean enPassantCapture = false;
+        if ((to.x() == from.x() + 1 || to.x() == from.x() - 1) && board.getPiece(to) == this) {
+            // captured piece is behind "to"
+            Position behindTo = new Position(to.x(), to.y() - direction);
 
-            board.removePiece(capturedPos);
-            view.removePiece(capturedPos.x(), capturedPos.y());
-
-            setEnPassant(false); // reset
+            // en passant is valid, remove captured pawn
+            Piece behindPiece = board.getPiece(behindTo);
+            if (behindPiece != null && behindPiece.color() != this.color()) {
+                enPassantCapture = true;
+                board.removePiece(behindTo);
+                view.removePiece(behindTo.x(), behindTo.y());
+            }
         }
+        setEnPassant(enPassantCapture);
+
+        checkPromotion(to);
 
         // handle promotion
         if (isPromotion) {
@@ -185,5 +176,7 @@ public class Pawn extends MovableOncePiece {
             board.setPiece(userChoice, move.to());
             view.putPiece(userChoice.type(), userChoice.color(), move.to().x(), move.to().y());
         }
+        // has moved in executeMove and not in isValidMove anymore
+        setHasMoved();
     }
 }
