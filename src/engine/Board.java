@@ -118,16 +118,6 @@ public class Board {
         board[pos.x()][pos.y()] = piece;
     }
 
-    // TODO
-    public boolean isCheckMate() {
-        return false;
-    }
-
-    // TODO
-    public boolean isStaleMate() {
-        return false;
-    }
-
     public King getKing(PlayerColor color) {
         return color == PlayerColor.WHITE ? whiteKing : blackKing;
     }
