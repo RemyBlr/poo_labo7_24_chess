@@ -20,6 +20,9 @@ public class Knight extends Piece {
         return PieceType.KNIGHT;
     }
 
+    /**
+     * Valid move for a knight is an L move (2 squares in one direction and 1 square in another)
+     */
     @Override
     public boolean isValidMove(Move move, Board board) {
         return Move.isLMove(move);

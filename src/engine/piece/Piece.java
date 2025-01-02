@@ -19,15 +19,44 @@ public abstract class Piece implements ChessView.UserChoice{
         this.pos = pos;
     }
 
+    /**
+     * @return the position of the piece
+     */
     public Position pos() { return this.pos; }
 
+    /**
+     * Set the position of the piece
+     * @param to the new position
+     */
+    public void setPos(Position to) {
+        this.pos = to;
+    }
+
+    /**
+     * @return the color of the piece
+     */
     public PlayerColor color() {return color;}
 
+    /**
+     * @return the type of the piece
+     */
     public abstract PieceType type();
 
+    /**
+     * Check if the move is valid for the piece.
+     * @param move the move to be checked
+     * @param board the board on which the move is to be executed
+     * @return true if the move is valid, false otherwise
+     */
     public abstract boolean isValidMove(Move move, Board board);
 
-    public void executeMove(Move move, Board board, ChessView view, Move lastMove) {
+    /**
+     * Execute the move on the board and update the view.
+     * @param move the move to be executed
+     * @param board the board on which the move is to be executed
+     * @param view the view to be updated
+     */
+    public void executeMove(Move move, Board board, ChessView view) {
         // default move
         board.movePiece(move);
 
@@ -36,16 +65,16 @@ public abstract class Piece implements ChessView.UserChoice{
         view.putPiece(this.type(), this.color(), move.to().x(), move.to().y());
     }
 
-    public void setPos(Position to) {
-        this.pos = to;
-    }
-
     /**
      * Called right after the piece has executed a valid move on the board.
      * Default implementation does nothing.
      */
     public void afterMove() {}
 
+    /**
+     * Flag to check if the piece can be captured en passant.
+     * @return true if the piece can be captured en passant, false otherwise
+     */
     public boolean canBeCapturedEnPassant() {
         return false; // every piece except pawn
     }

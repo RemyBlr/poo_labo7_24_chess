@@ -7,7 +7,7 @@ import engine.Move;
 import engine.Position;
 import chess.ChessView;
 
-public class Pawn extends MovableOncePiece {
+public class Pawn extends FirstMovePiece {
     private boolean isEnPassant;
     private boolean doublePawnMove;
     private boolean isPromotion;
@@ -19,36 +19,45 @@ public class Pawn extends MovableOncePiece {
         this.isPromotion = false;
     }
 
+    /**
+     * Set the en passant flag
+     * @param enPassant true if the pawn can be captured en passant
+     */
     public void setEnPassant(boolean enPassant) {
         isEnPassant = enPassant;
     }
 
+    /**
+     * @return true if the pawn moved two squares
+     */
     public boolean wasDoublePawnMove() {
         return doublePawnMove;
     }
 
+    /**
+     * Set the double pawn move flag
+     * @param doublePawnMove true if the pawn moved two squares
+     */
     public void setDoublePawnMove(boolean doublePawnMove) {
         this.doublePawnMove = doublePawnMove;
     }
 
+    /**
+     * Set the promotion flag
+     * @param promotion true if the pawn is at the end of the board
+     */
     public void setPromotion(boolean promotion) {
         isPromotion = promotion;
     }
 
     /**
      * Check if pawn is at the end of the board
+     * @param to the position of the pawn
      */
-    private void checkPromotion(Position to) {
+    private void setPromotionIfEndOfBoard(Position to) {
         if (color() == PlayerColor.WHITE && to.y() == 7 ||
             color() == PlayerColor.BLACK && to.y() == 0)
             setPromotion(true);
-    }
-
-    private Piece getPieceIfInside(Board board, int x, int y) {
-        if (x < 0 || x > 7 || y < 0 || y > 7) {
-            return null;
-        }
-        return board.getPiece(new Position(x, y));
     }
 
     @Override
@@ -57,12 +66,20 @@ public class Pawn extends MovableOncePiece {
     @Override
     public PieceType type() {return PieceType.PAWN;}
 
+    /**
+     * We want this method to call wasDoublePawnMove() only if it's a Pawn.
+     * Every piece can call this method, but only Pawn has the method wasDoublePawnMove().
+     * @return true if the pawn can be captured en passant
+     */
     @Override
     public boolean canBeCapturedEnPassant() {
-        // after promotion, will return false
         return wasDoublePawnMove();
     }
 
+    /**
+     * Valid move for a pawn is one square forward, two squares forward on first move,
+     * or one square diagonally to capture an enemy piece.
+     */
     @Override
     public boolean isValidMove(Move move, Board board) {
         Move lastMove = board.getLastMove();
@@ -73,16 +90,16 @@ public class Pawn extends MovableOncePiece {
         int direction = (color() == PlayerColor.WHITE) ? 1 : -1;
 
         // Move one square
-        if (destination == null &&      // empty space
-                from.x() == to.x() &&   // not horizontal
-                to.y() == from.y() + direction) {  // one square
+        if (destination == null &&              // empty space
+            from.x() == to.x() &&               // not horizontal
+            to.y() == from.y() + direction) {   // one square
             return true;
         }
 
         // Move two squares
-        if (!hasMoved() &&         // has not moved
-                from.x() == to.x() &&          // not horizontal
-                to.y() == from.y() + 2 * direction) {  // two squares
+        if (!hasMoved() &&                          // has not moved
+            from.x() == to.x() &&                   // not horizontal
+            to.y() == from.y() + 2 * direction) {   // two squares
 
             Position temp = new Position(from.x(), from.y() + direction);
             Piece squareInFrontPawn = board.getPiece(temp);
@@ -93,8 +110,8 @@ public class Pawn extends MovableOncePiece {
         }
 
         // Capture diagonal piece
-        if ((to.x() == from.x() + 1 || to.x() == from.x() - 1) &&  // one square to left or right
-                to.y() == from.y() + direction) {  // one forward
+        if ((to.x() == from.x() + 1 || to.x() == from.x() - 1) &&   // one square to left or right
+            to.y() == from.y() + direction) {                       // one forward
 
             // true if enemy piece and not empty
             if (destination != null && destination.color() != color()) {
@@ -121,8 +138,14 @@ public class Pawn extends MovableOncePiece {
         return false;
     }
 
+    /**
+     * Execute the pawn move
+     * @param move the move to execute
+     * @param board the board to execute the move on
+     * @param view the view to update
+     */
     @Override
-    public void executeMove(Move move, Board board, ChessView view, Move lastMove) {
+    public void executeMove(Move move, Board board, ChessView view) {
         Position from = move.from();
         Position to   = move.to();
         int direction = (color() == PlayerColor.WHITE) ? 1 : -1;
@@ -149,9 +172,11 @@ public class Pawn extends MovableOncePiece {
                 view.removePiece(behindTo.x(), behindTo.y());
             }
         }
-        setEnPassant(enPassantCapture);
 
-        checkPromotion(to);
+        // set en passant flag
+        setEnPassant(enPassantCapture);
+        // check if pawn is at the end of the board and set promotion flag if true
+        setPromotionIfEndOfBoard(to);
 
         // handle promotion
         if (isPromotion) {
@@ -160,11 +185,11 @@ public class Pawn extends MovableOncePiece {
             while(userChoice == null) {
                 userChoice = view.askUser(
                         "Promotion",
-                        "Choose a piece to promote to:",
+                        "Choose new piece to promote to:",
+                        new Queen(color(), move.to()),
                         new Bishop(color(), move.to()),
                         new Knight(color(), move.to()),
-                        new Rook(color(), move.to()),
-                        new Queen(color(), move.to())
+                        new Rook(color(), move.to())
                 );
             }
 

@@ -18,6 +18,10 @@ public class Queen extends Piece {
     @Override
     public PieceType type() {return PieceType.QUEEN;}
 
+    /**
+     * Valid move for a queen is a straight or diagonal move that does not go through obstacles
+     */
+    @Override
     public boolean isValidMove(Move move, Board board) {
         if (Move.isStraightMove(move)) {
             return Move.isClearPathStraight(move, board);
