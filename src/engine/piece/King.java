@@ -121,25 +121,15 @@ public class King extends FirstMovePiece {
      * @param board the board to check
      * @return true if the king can castle, false otherwise
      */
+    @Override
     public boolean canCastle(Move move, Board board) {
         Position from = move.from(), to = move.to();
         boolean small = to.x() - from.x() == 2;
 
         if (!this.hasMoved() && Math.abs(to.x() - from.x()) == 2 && from.y() == to.y()) {
-            // small castling
-            if (small) {
-                Piece rook = board.getPiece(new Position(7, from.y()));
-                System.out.println("Rook: " + rook);
-                if (rook != null && rook instanceof Rook r && !r.hasMoved()) {
-                    return true;
-                }
-            }
-            // queen side castling
-            else {
-                Piece rook = board.getPiece(new Position(0, from.y()));
-                if (rook != null && rook instanceof Rook r && !r.hasMoved()) {
-                    return true;
-                }
+            Piece rook = small ? board.getPiece(new Position(7, from.y())) : board.getPiece(new Position(0, from.y()));
+            if (rook != null && rook.canCastle(move, board)) {
+                return true;
             }
         }
         return false;

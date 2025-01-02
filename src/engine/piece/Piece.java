@@ -72,6 +72,16 @@ public abstract class Piece implements ChessView.UserChoice{
     public void afterMove() {}
 
     /**
+     * Check if the piece can castle.
+     * @param move the move to be executed
+     * @param board the board on which the move is to be executed
+     * @return true if the piece can castle, false otherwise
+     */
+    public boolean canCastle(Move move, Board board) {
+        return false;
+    }
+
+    /**
      * Flag to check if the piece can be captured en passant.
      * @return true if the piece can be captured en passant, false otherwise
      */

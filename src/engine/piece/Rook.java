@@ -26,4 +26,11 @@ public class Rook extends FirstMovePiece {
         return Move.isClearPathStraight(move, board) &&
                 Move.isStraightMove(move);
     }
+
+    @Override
+    public boolean canCastle(Move move, Board board) {
+        if(this.hasMoved()) return false;
+
+        return true;
+    }
 }
