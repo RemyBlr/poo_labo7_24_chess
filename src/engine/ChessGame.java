@@ -10,7 +10,6 @@ public class ChessGame implements ChessController {
 
     private ChessView view;
     private Board board;
-    private boolean isGameOver;
     private PlayerColor currentPlayerColor;
 
     private Piece lastPieceCaptured = null;
@@ -79,22 +78,20 @@ public class ChessGame implements ChessController {
 
         // execute move
         pieceFrom.executeMove(move, board, view, board.getLastMove());
-
         pieceFrom.afterMove();
 
-        if(isKingChecked(pieceFrom, move)) return false;
+        if(isKingChecked(pieceFrom, move)) {
+            view.displayMessage("You can't leave your King in check");
+            return false;
+        }
 
         // switch player and save last move
         currentPlayerColor = (currentPlayerColor == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
         view.displayMessage("It's " + currentPlayerColor + "'s turn");
         board.setLastMove(move); // save last move for checks
 
-        if (isCheckMate() || isStaleMate()) {
-            isGameOver = true;
-            view.displayMessage("Game over");
-            newGame();
-            //return false;
-        }
+        if (isCheckMate()) view.displayMessage("Checkmate! Game over.");
+        else if (isStaleMate()) view.displayMessage("Stalemate! Game over.");
 
         return true;
     }
@@ -103,11 +100,61 @@ public class ChessGame implements ChessController {
         return board.getKing(currentPlayerColor);
     }
 
-    private boolean isStaleMate() {
+    /*private boolean isStaleMate() {
         if(getPlayerKing().isChecked(board)) return false;
         if(board.getPlayerPieceCount(PlayerColor.WHITE) == 1 && board.getPlayerPieceCount(PlayerColor.BLACK) == 1) return true;
         if(board.getPlayerPieceCount(currentPlayerColor) != 1) return false;
         return hasKingValidMoves();
+    }*/
+
+    private boolean isStaleMate() {
+        // king is not checked
+        if (getPlayerKing().isChecked(board)) return false;
+
+        // get over all pieces
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                Piece piece = board.getPiece(new Position(x, y));
+                if (piece == null) continue;
+                if (piece.color() != currentPlayerColor) continue;
+
+                // test all possible moves
+                for (int tx = 0; tx < 8; tx++) {
+                    for (int ty = 0; ty < 8; ty++) {
+                        Position toPos = new Position(tx, ty);
+                        // hypothetic move
+                        Move testMove = new Move(new Position(x, y), toPos);
+
+                        // valid move
+                        if (!piece.isValidMove(testMove, board)) continue;
+
+                        // not ally piece
+                        Piece pieceTo = board.getPiece(toPos);
+                        if (pieceTo != null && pieceTo.color() == currentPlayerColor) continue;
+
+                        // test move
+                        Piece captured = board.getPiece(toPos);
+                        // temp move
+                        board.movePiece(testMove);
+
+                        boolean stillInCheck = getPlayerKing().isChecked(board);
+
+                        // reverse move
+                        Move inverse = testMove.inverse();
+                        board.movePiece(inverse);
+
+                        // set captured piece back
+                        if (captured != null) board.setPiece(captured, testMove.to());
+
+                        // still legal move left to play
+                        if (!stillInCheck) return false;
+                    }
+                }
+            }
+        }
+
+        // not legal move left to play
+        return true;
     }
 
     private boolean isKingChecked(Piece pieceFrom, Move move)
@@ -116,7 +163,7 @@ public class ChessGame implements ChessController {
         if(isChecked)
         {
             //RollBack
-            view.displayMessage("Rollback");
+            //view.displayMessage("Rollback");
             rollback(pieceFrom, move);
             return true;
         }
@@ -139,7 +186,6 @@ public class ChessGame implements ChessController {
     public void newGame() {
         board = new Board();
         currentPlayerColor = PlayerColor.WHITE;
-        isGameOver = false;
         displayBoard();
     }
 
