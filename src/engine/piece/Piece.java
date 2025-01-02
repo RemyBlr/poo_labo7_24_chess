@@ -7,8 +7,8 @@ import engine.Move;
 import engine.Position;
 import chess.ChessView;
 
-/*
-...
+/**
+ * Represents a chess piece.
  */
 public abstract class Piece implements ChessView.UserChoice{
     PlayerColor color;
