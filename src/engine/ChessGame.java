@@ -96,7 +96,10 @@ public class ChessGame implements ChessController {
 
         // switch player and save last move
         currentPlayerColor = (currentPlayerColor == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE;
-        view.displayMessage("It's " + currentPlayerColor + "'s turn");
+        //view.displayMessage("It's " + currentPlayerColor + "'s turn");
+        String message = "It's " + currentPlayerColor + "'s turn" + (getPlayerKing().isChecked(board) ? " and King is Checked!" : "");
+        view.displayMessage(message);
+
         board.setLastMove(move);
 
         // check if the game is over
