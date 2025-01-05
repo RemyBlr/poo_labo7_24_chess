@@ -13,6 +13,8 @@ public class ChessGame implements ChessController {
     private PlayerColor currentPlayerColor;
 
     private Piece lastPieceCaptured = null;
+    private boolean isCheckMate = false;
+    private boolean isStaleMate = false;
 
     /*
      * Start a new game
@@ -41,6 +43,15 @@ public class ChessGame implements ChessController {
      */
     @Override
     public boolean move(int fromX, int fromY, int toX, int toY) {
+        if(isCheckMate) {
+            view.displayMessage("Checkmate! Game over.");
+            return false;
+        }
+        if(isStaleMate) {
+            view.displayMessage("Stalemate! Game over.");
+            return false;
+        }
+
         Position from = new Position(fromX, fromY), to = new Position(toX, toY);
         Piece pieceFrom = board.getPiece(from), pieceTo = board.getPiece(to);
         Move move = new Move(from, to);
@@ -103,10 +114,12 @@ public class ChessGame implements ChessController {
         // check if the game is over
         if (isCheckMate()) {
             view.displayMessage("Checkmate! Game over.");
+            isCheckMate = true;
             return false;
         }
         else if (isStaleMate()) {
             view.displayMessage("Stalemate! Game over.");
+            isStaleMate = true;
             return false;
         }
         board.setLastMove(move);
