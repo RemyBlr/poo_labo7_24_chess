@@ -39,23 +39,33 @@ de ce projet.
 - Roi : gère le roque.
 - Pion : gère la prise en passant et la promotion.
 
-### 3.2.1 Roque
+#### 3.2.1 Roque
 - On vérifie si le roi veut se déplacer de deux case à droite ou à gauche de sa position (sans qu'il y ait de pièce entre le roi et la tour)
 - Lorsque les deux pièces concernées n'ont jusqu'alors pas bougé de la partie elles sont autorisées à exécuter le roque
 
-### 3.2.2 Promotion
+#### 3.2.2 Promotion
 - Teste si le pion atteint la dernière ligne.
 - Utilise `view.askUser()` pour demander la pièce choisie au joueur.
 - Remplace le pion par une nouvelle pièce dans le `Board` et met à jour la vue.
 
-### 3.2.3 Prise en passant
+#### 3.2.3 Prise en passant
 - Flag `doublePawnMove` pour signaler qu’un pion a avancé de 2 cases.
 - `isEnPassant` est mis à true si le déplacement est validé en diagonale vers une case vide et que le dernier coup
   était un double pas d’un pion adverse qui se place à côté du pion allié.
 - Après le déplacement, on retire le pion adverse juste derrière la case d’arrivée.
 
+### 3.3 Echec et mat
+
+### 3.4 Pat
+- Vérifie que le roi n'est ps en échec.
+- On parcourt toutes les pièces pour vérifier qu'aucune à un coup légal en testant toutes les destinatiosn possibles.
+- Si une destination est un coup valide (`isValidMove`) et qu'après avoir simulé le déplacement le roi n'est pas en échec, ce n'est pas un pat.
+- Il y a pat si aucun déplacement permet d'éviter ou d'entrer en échec.
+
 ## 4. Tests
 Nous avons réalisé chaque cas de figure spécifique demandé dans l'énoncé du laboratoire du coup classique bouger un cavalier au coup plus complexe comme le roque ou la prise en passant.
+- https://www.chess.com/forum/view/game-showcase/fastest-stalemate-known-in-chess
+- https://www.chess.com/forum/view/general/stalemate-on-move-12-with-all-the-pieces-on-the-board
 
 ## 5. Conclusion
 L’implémentation utilise une architecture orientée objet, où :
@@ -67,6 +77,3 @@ L’implémentation utilise une architecture orientée objet, où :
 - L'encapsulation de chaque mouvement spécifique dans les classes des pièces a été un défi pour garantir la modularité et la lisibilité du code.
 - L'echec et mat a été un défi pour nous car il a fallu vérifier si le roi était en echec et si il pouvait bouger pour sortir de cette situation d'après toutes les pièces adverses.
 - La prise en passant a été un défi pour nous car il a fallu vérifier si le pion adverse avait bougé de deux cases et si le pion allié pouvait le prendre.
-
-### Améliorations possibles
-TODO
