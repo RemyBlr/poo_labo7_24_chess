@@ -55,6 +55,11 @@ de ce projet.
 - Après le déplacement, on retire le pion adverse juste derrière la case d’arrivée.
 
 ### 3.3 Echec et mat
+- On Vérifie si le roi est échec.
+- On regarde si le roi a un coup valide.
+- On Vérifie si une pièce alliée peut tuer l'attaquant, si on ne peut pas et que l'attaquant est un cavalier alors c'est checkmate
+- On Vérifie selon la direction(horizontal ou vertical) de l'attaque si une pièce peut se mettre entre le roi et l'attaquant.
+- échec et mat si aucune des vérfications ci-dessus ne passe.
 
 ### 3.4 Pat
 - Vérifie que le roi n'est ps en échec.
