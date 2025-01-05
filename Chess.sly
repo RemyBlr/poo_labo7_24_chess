@@ -175,8 +175,10 @@
     <entity entityType="CLASS" id="18011" isAbstract="false" name="ChessGame" visibility="PUBLIC">
       <attribute const="false" defaultValue="" isStatic="false" name="view" type="ChessView" visibility="PRIVATE"/>
       <attribute const="false" defaultValue="" isStatic="false" name="board" type="Board" visibility="PRIVATE"/>
-      <attribute const="false" defaultValue="" isStatic="false" name="isGameOver" type="boolean" visibility="PRIVATE"/>
       <attribute const="false" defaultValue="" isStatic="false" name="currentPlayer" type="PlayerColor" visibility="PRIVATE"/>
+      <attribute const="false" defaultValue="" isStatic="false" name="lastPieceCaptured" type="Piece" visibility="PRIVATE"/>
+      <attribute const="false" defaultValue="" isStatic="false" name="isCheckMate" type="boolean" visibility="PRIVATE"/>
+      <attribute const="false" defaultValue="" isStatic="false" name="isStaleMate" type="boolean" visibility="PRIVATE"/>
       <method isAbstract="false" isStatic="false" name="newGame" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
       <method isAbstract="false" isStatic="false" name="start" returnType="void" view="DEFAULT" visibility="PUBLIC">
         <variable const="false" name="view" type="ChessView"/>
@@ -533,7 +535,7 @@
       <line>
         <point>
           <x>271</x>
-          <y>346</y>
+          <y>376</y>
         </point>
         <point>
           <x>271</x>
@@ -542,13 +544,13 @@
       </line>
       <labelAssociation>
         <x>280</x>
-        <y>384</y>
+        <y>399</y>
         <w>32</w>
         <h>16</h>
       </labelAssociation>
       <roleAssociation>
         <x>275</x>
-        <y>350</y>
+        <y>380</y>
         <w>0</w>
         <h>16</h>
       </roleAssociation>
@@ -560,7 +562,7 @@
       </roleAssociation>
       <multipliciteAssociation>
         <x>247</x>
-        <y>350</y>
+        <y>380</y>
         <w>8</w>
         <h>16</h>
       </multipliciteAssociation>
@@ -814,7 +816,7 @@
         <x>140</x>
         <y>20</y>
         <w>340</w>
-        <h>325</h>
+        <h>355</h>
       </geometry>
     </componentView>
     <componentView color="-2079" componentID="18045" displayAttributes="true" displayDefault="true" displayMethods="true">
