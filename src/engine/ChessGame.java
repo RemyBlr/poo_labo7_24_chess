@@ -23,6 +23,8 @@ public class ChessGame implements ChessController {
     @Override
     public void newGame() {
         board = new Board();
+        isCheckMate = false;
+        isStaleMate = false;
         currentPlayerColor = PlayerColor.WHITE;
         displayBoard();
     }
@@ -282,6 +284,8 @@ public class ChessGame implements ChessController {
                 king.pos().add(new Position(-1,-1)),    //bot-left
                 king.pos().add(new Position(-1,0)),     //left
                 king.pos().add(new Position(-1,1)),     //top-left
+                king.pos().add(new Position(2,0)),      //roque right
+                king.pos().add(new Position(-2,0)),     //roque left
         };
 
         for(Position move : moves) {
