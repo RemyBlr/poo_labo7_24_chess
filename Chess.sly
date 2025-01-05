@@ -136,8 +136,8 @@
       <method isAbstract="false" isStatic="false" name="toString" returnType="String" view="DEFAULT" visibility="PUBLIC"/>
     </entity>
     <entity entityType="CLASS" id="18045" isAbstract="true" name="Piece" visibility="PUBLIC">
-      <attribute const="false" defaultValue="" isStatic="false" name="color" type="PlayerColor" visibility="PRIVATE"/>
-      <attribute const="false" defaultValue="" isStatic="false" name="position" type="Position" visibility="PRIVATE"/>
+      <attribute const="false" defaultValue="" isStatic="false" name="color" type="PlayerColor" visibility="PROTECTED"/>
+      <attribute const="false" defaultValue="" isStatic="false" name="position" type="Position" visibility="PROTECTED"/>
       <method isAbstract="true" isStatic="false" name="pos" returnType="Position" view="DEFAULT" visibility="PUBLIC"/>
       <method isAbstract="true" isStatic="false" name="setPos" returnType="void" view="DEFAULT" visibility="PUBLIC">
         <variable const="false" name="to" type="Position"/>
@@ -166,7 +166,11 @@
         <variable const="false" name="view" type="ChessView"/>
       </method>
       <method isAbstract="true" isStatic="false" name="afterMove" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
-      <method isAbstract="true" isStatic="false" name="canBeCapturedEnPassant" returnType="boolean" view="DEFAULT" visibility="PUBLIC"/>
+      <method isAbstract="true" isStatic="false" name="canBeCapturedEnPassant" returnType="boolean" view="DEFAULT" visibility="PROTECTED"/>
+      <method isAbstract="true" isStatic="false" name="canCastle" returnType="boolean" view="DEFAULT" visibility="PROTECTED">
+        <variable const="false" name="move" type="Move"/>
+        <variable const="false" name="board" type="Board"/>
+      </method>
     </entity>
     <entity entityType="CLASS" id="18011" isAbstract="false" name="ChessGame" visibility="PUBLIC">
       <attribute const="false" defaultValue="" isStatic="false" name="view" type="ChessView" visibility="PRIVATE"/>
@@ -224,12 +228,12 @@
       <method isAbstract="false" isStatic="false" name="setPromotion" returnType="void" view="DEFAULT" visibility="PUBLIC">
         <variable const="false" name="promotion" type="boolean"/>
       </method>
-      <method isAbstract="false" isStatic="false" name="setPromotionIfEndOfBoard" returnType="void" view="DEFAULT" visibility="PUBLIC">
+      <method isAbstract="false" isStatic="false" name="setPromotionIfEndOfBoard" returnType="void" view="DEFAULT" visibility="PRIVATE">
         <variable const="false" name="to" type="Position"/>
       </method>
       <method isAbstract="false" isStatic="false" name="textValue" returnType="String" view="DEFAULT" visibility="PUBLIC"/>
       <method isAbstract="false" isStatic="false" name="type" returnType="PieceType" view="DEFAULT" visibility="PUBLIC"/>
-      <method isAbstract="false" isStatic="false" name="canBeCaputredEnPassant" returnType="boolean" view="DEFAULT" visibility="PUBLIC"/>
+      <method isAbstract="false" isStatic="false" name="canBeCaputredEnPassant" returnType="boolean" view="DEFAULT" visibility="PROTECTED"/>
       <method isAbstract="false" isStatic="false" name="isValidMove" returnType="boolean" view="DEFAULT" visibility="PUBLIC">
         <variable const="false" name="move" type="Move"/>
         <variable const="false" name="board" type="Board"/>
@@ -295,20 +299,26 @@
         <variable const="false" name="move" type="Move"/>
         <variable const="false" name="board" type="Board"/>
       </method>
+      <method isAbstract="false" isStatic="false" name="canCastle" returnType="boolean" view="DEFAULT" visibility="PROTECTED">
+        <variable const="false" name="move" type="Move"/>
+        <variable const="false" name="board" type="Board"/>
+      </method>
     </entity>
     <entity entityType="CLASS" id="18057" isAbstract="true" name="FirstMovePiece" visibility="PUBLIC">
-      <attribute const="false" defaultValue="" isStatic="false" name="hasMoved" type="bool" visibility="PRIVATE"/>
-      <method isAbstract="true" isStatic="false" name="setHasMoved" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
-      <method isAbstract="true" isStatic="false" name="hasMoved" returnType="boolean" view="DEFAULT" visibility="PUBLIC"/>
+      <attribute const="false" defaultValue="" isStatic="false" name="hasMoved" type="bool" visibility="PROTECTED"/>
+      <method isAbstract="true" isStatic="false" name="setHasMoved" returnType="void" view="DEFAULT" visibility="PROTECTED"/>
+      <method isAbstract="true" isStatic="false" name="hasMoved" returnType="boolean" view="DEFAULT" visibility="PROTECTED"/>
       <method isAbstract="true" isStatic="false" name="afterMove" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
     </entity>
     <entity entityType="CLASS" id="18220" isAbstract="false" name="Board" visibility="PUBLIC">
       <attribute const="false" defaultValue="" isStatic="false" name="BOARD_SIZE" type="int" visibility="PRIVATE"/>
       <attribute const="false" defaultValue="" isStatic="false" name="board" type="Piece[][]" visibility="PRIVATE"/>
       <attribute const="false" defaultValue="" isStatic="false" name="lastMove" type="Move" visibility="PRIVATE"/>
-      <method isAbstract="false" isStatic="false" name="initializeBoard" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
-      <method isAbstract="false" isStatic="false" name="setInitialPosition" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
-      <method isAbstract="false" isStatic="false" name="addPiece" returnType="void" view="DEFAULT" visibility="PUBLIC">
+      <attribute const="false" defaultValue="" isStatic="false" name="whiteKing" type="King" visibility="PRIVATE"/>
+      <attribute const="false" defaultValue="" isStatic="false" name="blackKing" type="King" visibility="PRIVATE"/>
+      <method isAbstract="false" isStatic="false" name="initializeBoard" returnType="void" view="DEFAULT" visibility="PRIVATE"/>
+      <method isAbstract="false" isStatic="false" name="setInitialPosition" returnType="void" view="DEFAULT" visibility="PRIVATE"/>
+      <method isAbstract="false" isStatic="false" name="addPiece" returnType="void" view="DEFAULT" visibility="PRIVATE">
         <variable const="false" name="piece" type="Piece"/>
       </method>
       <method isAbstract="false" isStatic="false" name="getPiece" returnType="Piece" view="DEFAULT" visibility="PUBLIC">
@@ -321,12 +331,12 @@
       <method isAbstract="false" isStatic="false" name="movePiece" returnType="void" view="DEFAULT" visibility="PUBLIC">
         <variable const="false" name="move" type="Move"/>
       </method>
-      <method isAbstract="false" isStatic="false" name="setPawns" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
-      <method isAbstract="false" isStatic="false" name="setRooks" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
-      <method isAbstract="false" isStatic="false" name="setKnights" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
-      <method isAbstract="false" isStatic="false" name="setBishops" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
-      <method isAbstract="false" isStatic="false" name="setQueens" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
-      <method isAbstract="false" isStatic="false" name="setKings" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
+      <method isAbstract="false" isStatic="false" name="setPawns" returnType="void" view="DEFAULT" visibility="PRIVATE"/>
+      <method isAbstract="false" isStatic="false" name="setRooks" returnType="void" view="DEFAULT" visibility="PRIVATE"/>
+      <method isAbstract="false" isStatic="false" name="setKnights" returnType="void" view="DEFAULT" visibility="PRIVATE"/>
+      <method isAbstract="false" isStatic="false" name="setBishops" returnType="void" view="DEFAULT" visibility="PRIVATE"/>
+      <method isAbstract="false" isStatic="false" name="setQueens" returnType="void" view="DEFAULT" visibility="PRIVATE"/>
+      <method isAbstract="false" isStatic="false" name="setKings" returnType="void" view="DEFAULT" visibility="PRIVATE"/>
       <method isAbstract="false" isStatic="false" name="setLastMove" returnType="void" view="DEFAULT" visibility="PUBLIC">
         <variable const="false" name="move" type="Move"/>
       </method>
@@ -338,22 +348,15 @@
       <method isAbstract="false" isStatic="false" name="from" returnType="Position" view="DEFAULT" visibility="PUBLIC"/>
       <method isAbstract="false" isStatic="false" name="to" returnType="Position" view="DEFAULT" visibility="PUBLIC"/>
       <method isAbstract="false" isStatic="false" name="inverse" returnType="Move" view="DEFAULT" visibility="PUBLIC"/>
-      <method isAbstract="false" isStatic="false" name="isDiagonalMove" returnType="boolean" view="DEFAULT" visibility="PUBLIC">
-        <variable const="false" name="move" type="Move"/>
-      </method>
-      <method isAbstract="false" isStatic="false" name="isStraightMove" returnType="boolean" view="DEFAULT" visibility="PUBLIC">
-        <variable const="false" name="move" type="Move"/>
-      </method>
+      <method isAbstract="false" isStatic="false" name="isDiagonalMove" returnType="boolean" view="DEFAULT" visibility="PUBLIC"/>
+      <method isAbstract="false" isStatic="false" name="isStraightMove" returnType="boolean" view="DEFAULT" visibility="PUBLIC"/>
       <method isAbstract="false" isStatic="false" name="isClearPathStraight" returnType="boolean" view="DEFAULT" visibility="PUBLIC">
-        <variable const="false" name="move" type="Move"/>
-      </method>
-      <method isAbstract="false" isStatic="false" name="isClearPathDiagonal" returnType="boolean" view="DEFAULT" visibility="PUBLIC">
-        <variable const="false" name="move" type="Move"/>
         <variable const="false" name="board" type="Board"/>
       </method>
-      <method isAbstract="false" isStatic="false" name="isLMove" returnType="boolean" view="DEFAULT" visibility="PUBLIC">
-        <variable const="false" name="move" type="Move"/>
+      <method isAbstract="false" isStatic="false" name="isClearPathDiagonal" returnType="boolean" view="DEFAULT" visibility="PUBLIC">
+        <variable const="false" name="board" type="Board"/>
       </method>
+      <method isAbstract="false" isStatic="false" name="isLMove" returnType="boolean" view="DEFAULT" visibility="PUBLIC"/>
       <method isAbstract="false" isStatic="false" name="toString" returnType="String" view="DEFAULT" visibility="PUBLIC"/>
     </entity>
   </diagramElements>
@@ -430,8 +433,8 @@
         <h>16</h>
       </roleAssociation>
       <multipliciteAssociation>
-        <x>1075</x>
-        <y>599</y>
+        <x>1085</x>
+        <y>624</y>
         <w>23</w>
         <h>16</h>
       </multipliciteAssociation>
@@ -445,8 +448,8 @@
     <relationView color="-12566464" relationId="28884">
       <line>
         <point>
-          <x>961</x>
-          <y>371</y>
+          <x>991</x>
+          <y>251</y>
         </point>
         <point>
           <x>1141</x>
@@ -454,14 +457,14 @@
         </point>
       </line>
       <labelAssociation>
-        <x>998</x>
-        <y>377</y>
+        <x>1013</x>
+        <y>317</y>
         <w>108</w>
         <h>16</h>
       </labelAssociation>
       <roleAssociation>
-        <x>965</x>
-        <y>375</y>
+        <x>995</x>
+        <y>255</y>
         <w>0</w>
         <h>16</h>
       </roleAssociation>
@@ -472,8 +475,8 @@
         <h>16</h>
       </roleAssociation>
       <multipliciteAssociation>
-        <x>965</x>
-        <y>349</y>
+        <x>995</x>
+        <y>229</y>
         <w>7</w>
         <h>16</h>
       </multipliciteAssociation>
@@ -488,7 +491,7 @@
       <line>
         <point>
           <x>801</x>
-          <y>531</y>
+          <y>381</y>
         </point>
         <point>
           <x>801</x>
@@ -497,13 +500,13 @@
       </line>
       <labelAssociation>
         <x>742</x>
-        <y>546</y>
+        <y>471</y>
         <w>52</w>
         <h>16</h>
       </labelAssociation>
       <roleAssociation>
         <x>805</x>
-        <y>535</y>
+        <y>385</y>
         <w>0</w>
         <h>16</h>
       </roleAssociation>
@@ -515,7 +518,7 @@
       </roleAssociation>
       <multipliciteAssociation>
         <x>789</x>
-        <y>534</y>
+        <y>384</y>
         <w>7</w>
         <h>16</h>
       </multipliciteAssociation>
@@ -576,12 +579,12 @@
         </point>
         <point>
           <x>711</x>
-          <y>381</y>
+          <y>231</y>
         </point>
       </line>
       <labelAssociation>
-        <x>590</x>
-        <y>435</y>
+        <x>555</x>
+        <y>373</y>
         <w>97</w>
         <h>16</h>
       </labelAssociation>
@@ -593,7 +596,7 @@
       </roleAssociation>
       <roleAssociation>
         <x>705</x>
-        <y>385</y>
+        <y>235</y>
         <w>0</w>
         <h>16</h>
       </roleAssociation>
@@ -605,7 +608,7 @@
       </multipliciteAssociation>
       <multipliciteAssociation>
         <x>697</x>
-        <y>359</y>
+        <y>209</y>
         <w>8</w>
         <h>16</h>
       </multipliciteAssociation>
@@ -678,7 +681,7 @@
         </point>
         <point>
           <x>831</x>
-          <y>816</y>
+          <y>831</y>
         </point>
       </line>
     </relationView>
@@ -698,7 +701,7 @@
         </point>
         <point>
           <x>831</x>
-          <y>816</y>
+          <y>831</y>
         </point>
       </line>
     </relationView>
@@ -718,7 +721,7 @@
         </point>
         <point>
           <x>831</x>
-          <y>816</y>
+          <y>831</y>
         </point>
       </line>
     </relationView>
@@ -730,15 +733,15 @@
         </point>
         <point>
           <x>831</x>
-          <y>816</y>
+          <y>831</y>
         </point>
       </line>
     </relationView>
     <componentView color="-2079" componentID="19533" displayAttributes="true" displayDefault="true" displayMethods="true">
       <geometry>
         <x>710</x>
-        <y>310</y>
-        <w>250</w>
+        <y>160</y>
+        <w>280</w>
         <h>220</h>
       </geometry>
     </componentView>
@@ -747,7 +750,7 @@
         <x>110</x>
         <y>430</y>
         <w>350</w>
-        <h>310</h>
+        <h>340</h>
       </geometry>
     </componentView>
     <componentView color="-2079" componentID="18057" displayAttributes="true" displayDefault="true" displayMethods="true">
@@ -763,7 +766,7 @@
         <x>640</x>
         <y>1050</y>
         <w>310</w>
-        <h>100</h>
+        <h>115</h>
       </geometry>
     </componentView>
     <componentView color="-2079" componentID="18049" displayAttributes="true" displayDefault="true" displayMethods="true">
@@ -819,7 +822,7 @@
         <x>580</x>
         <y>580</y>
         <w>490</w>
-        <h>235</h>
+        <h>250</h>
       </geometry>
     </componentView>
     <componentView color="-2079" componentID="18557" displayAttributes="true" displayDefault="true" displayMethods="true">
