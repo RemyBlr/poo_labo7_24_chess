@@ -93,8 +93,15 @@ public class ChessGame implements ChessController {
             view.displayMessage("You can't leave your King in check");
 
             // check if the game is over
-            if (isCheckMate()) view.displayMessage("Checkmate! Game over.");
-            else if (isStaleMate()) view.displayMessage("Stalemate! Game over.");
+            if (isCheckMate()) {
+                view.displayMessage("Checkmate! Game over.");
+                return false;
+            }
+            else if (isStaleMate()) {
+                view.displayMessage("Stalemate! Game over.");
+                return false;
+            }
+
             return false;
         }
 
@@ -226,7 +233,7 @@ public class ChessGame implements ChessController {
         Piece pieceTo = board.getPiece(to);
 
         if(pieceTo != null && king.color().equals(pieceTo.color())) return false;
-        
+
         //register piece Captured
         lastPieceCaptured = pieceTo;
 
