@@ -29,7 +29,7 @@ public class King extends FirstMovePiece {
     public boolean isValidMove(Move move, Board board) {
         Position from = move.from(), to = move.to();
 
-        // castling
+        // Roque possible
         if(canCastle(move, board)) {
             return true;
         }
@@ -39,7 +39,7 @@ public class King extends FirstMovePiece {
             return false;
         }
 
-        return true; // move is valid
+        return true;
     }
 
     /**
@@ -57,7 +57,7 @@ public class King extends FirstMovePiece {
             // move king
             board.movePiece(move);
             view.removePiece(move.from().x(), move.from().y());
-            view.putPiece(this.type(), this.color(), move.to().x(), move.to().y());
+            view.putPiece(this.type(), this.color, move.to().x(), move.to().y());
 
             // move rook
             boolean isKingSide = (move.to().x() - move.from().x()) == 2;
@@ -70,7 +70,7 @@ public class King extends FirstMovePiece {
                 );
                 board.movePiece(rookMove);
                 view.removePiece(7, move.from().y());
-                view.putPiece(PieceType.ROOK, this.color(), 5, move.from().y());
+                view.putPiece(PieceType.ROOK, this.color, 5, move.from().y());
             } else {
                 // queen side castling
                 Move rookMove = new Move(
@@ -79,7 +79,7 @@ public class King extends FirstMovePiece {
                 );
                 board.movePiece(rookMove);
                 view.removePiece(0, move.from().y());
-                view.putPiece(PieceType.ROOK, this.color(), 3, move.from().y());
+                view.putPiece(PieceType.ROOK, this.color, 3, move.from().y());
             }
         } else {
             // normal king move
@@ -122,11 +122,11 @@ public class King extends FirstMovePiece {
      * @return true if the king can castle, false otherwise
      */
     @Override
-    public boolean canCastle(Move move, Board board) {
+    protected boolean canCastle(Move move, Board board) {
         Position from = move.from(), to = move.to();
         boolean small = to.x() - from.x() == 2;
 
-        if (!this.hasMoved() && Math.abs(to.x() - from.x()) == 2 && from.y() == to.y()) {
+        if (!this.hasMoved && Math.abs(to.x() - from.x()) == 2 && from.y() == to.y()) {
             Piece rook = small ? board.getPiece(new Position(7, from.y())) : board.getPiece(new Position(0, from.y()));
             if (rook != null && rook.canCastle(move, board)) {
                 return true;

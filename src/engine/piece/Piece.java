@@ -11,8 +11,8 @@ import chess.ChessView;
  * Represents a chess piece.
  */
 public abstract class Piece implements ChessView.UserChoice{
-    PlayerColor color;
-    Position pos;
+    protected PlayerColor color;
+    protected Position pos;
 
     public Piece(PlayerColor color, Position pos) {
         this.color = color;
@@ -77,7 +77,7 @@ public abstract class Piece implements ChessView.UserChoice{
      * @param board the board on which the move is to be executed
      * @return true if the piece can castle, false otherwise
      */
-    public boolean canCastle(Move move, Board board) {
+    protected boolean canCastle(Move move, Board board) {
         return false;
     }
 
@@ -85,7 +85,7 @@ public abstract class Piece implements ChessView.UserChoice{
      * Flag to check if the piece can be captured en passant.
      * @return true if the piece can be captured en passant, false otherwise
      */
-    public boolean canBeCapturedEnPassant() {
+    protected boolean canBeCapturedEnPassant() {
         return false; // every piece except pawn
     }
 }

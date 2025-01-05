@@ -296,7 +296,7 @@ public class ChessGame implements ChessController {
     }
 
     /**
-     * Check if any ally piece has a valid move to a position
+     * Check if any ally piece except the king has a valid move to a position
      * @param allyColor the color of the ally piece
      * @param pos the position to check
      * @return true if any ally piece has a valid move to the position, false otherwise

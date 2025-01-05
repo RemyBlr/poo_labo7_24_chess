@@ -72,7 +72,7 @@ public class Pawn extends FirstMovePiece {
      * @return true if the pawn can be captured en passant
      */
     @Override
-    public boolean canBeCapturedEnPassant() {
+    protected boolean canBeCapturedEnPassant() {
         return wasDoublePawnMove();
     }
 
@@ -156,7 +156,7 @@ public class Pawn extends FirstMovePiece {
         // basic movement on board
         board.movePiece(move);
         view.removePiece(move.from().x(), move.from().y());
-        view.putPiece(this.type(), this.color(), move.to().x(), move.to().y());
+        view.putPiece(this.type(), this.color, move.to().x(), move.to().y());
 
         // handle en passant
         boolean enPassantCapture = false;
@@ -166,7 +166,7 @@ public class Pawn extends FirstMovePiece {
 
             // en passant is valid, remove captured pawn
             Piece behindPiece = board.getPiece(behindTo);
-            if (behindPiece != null && behindPiece.color() != this.color()) {
+            if (behindPiece != null && behindPiece.color() != this.color) {
                 enPassantCapture = true;
                 board.removePiece(behindTo);
                 view.removePiece(behindTo.x(), behindTo.y());

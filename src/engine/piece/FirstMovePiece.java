@@ -7,7 +7,7 @@ import engine.Position;
  * Represents pieces that move differently on their first move.
  */
 public abstract class FirstMovePiece extends Piece {
-    private boolean hasMoved;
+    protected boolean hasMoved;
 
     public FirstMovePiece(PlayerColor color, Position pos) {
         super(color, pos);
@@ -16,14 +16,14 @@ public abstract class FirstMovePiece extends Piece {
     /**
      * Set the hasMoved flag to true.
      */
-    public void setHasMoved() {
+    protected void setHasMoved() {
         hasMoved = true;
     }
 
     /**
      * @return true if the piece has moved, false otherwise
      */
-    public boolean hasMoved() {
+    protected boolean hasMoved() {
         return hasMoved;
     }
 

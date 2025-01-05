@@ -23,13 +23,13 @@ public class Rook extends FirstMovePiece {
      */
     @Override
     public boolean isValidMove(Move move, Board board) {
-        return Move.isClearPathStraight(move, board) &&
-                Move.isStraightMove(move);
+        return move.isClearPathStraight(board) &&
+                move.isStraightMove();
     }
 
     @Override
-    public boolean canCastle(Move move, Board board) {
-        if(this.hasMoved()) return false;
+    protected boolean canCastle(Move move, Board board) {
+        if(this.hasMoved) return false;
 
         return true;
     }

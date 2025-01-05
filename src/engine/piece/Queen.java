@@ -23,11 +23,11 @@ public class Queen extends Piece {
      */
     @Override
     public boolean isValidMove(Move move, Board board) {
-        if (Move.isStraightMove(move)) {
-            return Move.isClearPathStraight(move, board);
+        if (move.isStraightMove()) {
+            return move.isClearPathStraight(board);
         }
-        if (Move.isDiagonalMove(move)) {
-            return Move.isClearPathDiagonal(move, board);
+        if (move.isDiagonalMove()) {
+            return move.isClearPathDiagonal(board);
         }
         return false;
     }

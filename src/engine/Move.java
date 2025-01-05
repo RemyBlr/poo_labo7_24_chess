@@ -42,31 +42,26 @@ public class Move {
 
     /**
      * Check if a move is a diagonal move
-     * @param move the move to check
      * @return true if the move is a diagonal move, false otherwise
      */
-    public static boolean isDiagonalMove(Move move) {
-        Position from = move.from(), to = move.to();
+    public boolean isDiagonalMove() {
         return Math.abs(to.x() - from.x()) == Math.abs(to.y() - from.y());
     }
 
     /**
      * Check if a move is a straight move
-     * @param move the move to check
      * @return true if the move is a straight move, false otherwise
      */
-    public static boolean isStraightMove(Move move) {
-        return move.from().x() == move.to().x() || move.from().y() == move.to().y();
+    public boolean isStraightMove() {
+        return from.x() == to.x() || from.y() == to.y();
     }
 
     /**
      * Check if the path between two positions is clear on a straight line
-     * @param move the move to check
      * @param board the board on which the move is to be executed
      * @return true if the path is clear, false otherwise
      */
-    public static boolean isClearPathStraight(Move move, Board board) {
-        Position from = move.from(), to = move.to();
+    public boolean isClearPathStraight(Board board) {
         int incrX = Integer.compare(to.x(), from.x());
         int incrY = Integer.compare(to.y(), from.y());
 
@@ -79,13 +74,10 @@ public class Move {
 
     /**
      * Check if the path between two positions is clear on a diagonal line
-     * @param move the move to check
      * @param board the board on which the move is to be executed
      * @return true if the path is clear, false otherwise
      */
-    public static boolean isClearPathDiagonal(Move move, Board board) {
-        Position from = move.from(), to = move.to();
-
+    public boolean isClearPathDiagonal(Board board) {
         // Check if there is a piece on the path the bishop wants to go through
         int incrX = 1, incrY = 1; // Diagonal move up-right
         if (from.x() > to.x()) incrX = -1; // left
@@ -100,10 +92,9 @@ public class Move {
 
     /**
      * Check if a move is an L move
-     * @param move the move to check
      * @return true if the move is an L move, false otherwise
      */
-    public static boolean isLMove(Move move) {
-        return (Math.abs(move.to().x() - move.from().x()) == 2 && Math.abs(move.to().y() - move.from().y()) == 1) || (Math.abs(move.to().x() - move.from().x()) == 1 && Math.abs(move.to().y() - move.from().y()) == 2);
+    public boolean isLMove() {
+        return (Math.abs(this.to.x() - this.from.x()) == 2 && Math.abs(this.to.y() - this.from.y()) == 1) || (Math.abs(to.x() - this.from.x()) == 1 && Math.abs(to.y() - this.from.y()) == 2);
     }
 }

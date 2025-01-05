@@ -21,7 +21,7 @@ public class Board {
     /**
      * Initializes the board with null values
      */
-    public void initializeBoard() {
+    private void initializeBoard() {
         for(int x = 0; x < BOARD_SIZE; x++) {
             for(int y = 0; y < BOARD_SIZE; y++) {
                 board[x][y] = null;
@@ -32,7 +32,7 @@ public class Board {
     /**
      * Set the initial position of the pieces on the board
      */
-    public void setInitialPosition() {
+    private void setInitialPosition() {
         setPawns();
         setRooks();
         setBishops();
@@ -52,7 +52,7 @@ public class Board {
     /**
      * Set the pawns on the board (second row for white, seventh row for black)
      */
-    public void setPawns() {
+    private void setPawns() {
         for(int x = 0; x < BOARD_SIZE; x++) {
             addPiece(new Pawn(PlayerColor.WHITE, new Position(x, 1)));
             addPiece(new Pawn(PlayerColor.BLACK, new Position(x, 6)));
@@ -62,7 +62,7 @@ public class Board {
     /**
      * Set the rooks on the board
      */
-    public void setRooks() {
+    private void setRooks() {
         addPiece(new Rook(PlayerColor.WHITE, new Position(0, 0)));
         addPiece(new Rook(PlayerColor.WHITE, new Position(7, 0)));
         addPiece(new Rook(PlayerColor.BLACK, new Position(0, 7)));
@@ -72,7 +72,7 @@ public class Board {
     /**
      * Set the knights on the board
      */
-    public void setKnights() {
+    private void setKnights() {
         addPiece(new Knight(PlayerColor.WHITE, new Position(1, 0)));
         addPiece(new Knight(PlayerColor.WHITE, new Position(6, 0)));
         addPiece(new Knight(PlayerColor.BLACK, new Position(1, 7)));
@@ -82,7 +82,7 @@ public class Board {
     /**
      * Set the bishops on the board
      */
-    public void setBishops() {
+    private void setBishops() {
         addPiece(new Bishop(PlayerColor.WHITE, new Position(2, 0)));
         addPiece(new Bishop(PlayerColor.WHITE, new Position(5, 0)));
         addPiece(new Bishop(PlayerColor.BLACK, new Position(2, 7)));
@@ -92,7 +92,7 @@ public class Board {
     /**
      * Set the queens on the board
      */
-    public void setQueens() {
+    private void setQueens() {
         addPiece(new Queen(PlayerColor.WHITE, new Position(3, 0)));
         addPiece(new Queen(PlayerColor.BLACK, new Position(3, 7)));
     }
@@ -100,7 +100,7 @@ public class Board {
     /**
      * Set the kings on the board
      */
-    public void setKings() {
+    private void setKings() {
         whiteKing = new King(PlayerColor.WHITE, new Position(4, 0));
         addPiece(whiteKing);
         blackKing = new King(PlayerColor.BLACK, new Position(4, 7));

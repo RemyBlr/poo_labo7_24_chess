@@ -23,7 +23,7 @@ public class Bishop extends Piece {
      */
     @Override
     public boolean isValidMove(Move move, Board board) {
-        return Move.isClearPathDiagonal(move, board) &&
-                Move.isDiagonalMove(move);
+        return move.isClearPathDiagonal(board) &&
+                move.isDiagonalMove();
     }
 }
