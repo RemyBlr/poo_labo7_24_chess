@@ -91,6 +91,10 @@ public class ChessGame implements ChessController {
         // check if the king is checked
         if(isKingChecked(pieceFrom, move)) {
             view.displayMessage("You can't leave your King in check");
+
+            // check if the game is over
+            if (isCheckMate()) view.displayMessage("Checkmate! Game over.");
+            else if (isStaleMate()) view.displayMessage("Stalemate! Game over.");
             return false;
         }
 
@@ -101,10 +105,6 @@ public class ChessGame implements ChessController {
         view.displayMessage(message);
 
         board.setLastMove(move);
-
-        // check if the game is over
-        if (isCheckMate()) view.displayMessage("Checkmate! Game over.");
-        else if (isStaleMate()) view.displayMessage("Stalemate! Game over.");
 
         return true;
     }
