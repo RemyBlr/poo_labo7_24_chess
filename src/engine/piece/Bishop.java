@@ -18,9 +18,12 @@ public class Bishop extends Piece {
     @Override
     public PieceType type() {return PieceType.BISHOP;}
 
+    /**
+     * Valid move for a bishop is a diagonal move that does not go through obstacles
+     */
+    @Override
     public boolean isValidMove(Move move, Board board) {
-        // Cannot go through obstacles
-        return Move.isClearPathDiagonal(move, board) &&
-                Move.isDiagonalMove(move);
+        return move.isClearPathDiagonal(board) &&
+                move.isDiagonalMove();
     }
 }

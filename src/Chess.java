@@ -2,6 +2,11 @@ import chess.ChessController;
 import chess.ChessView;
 import chess.views.gui.GUIView;
 
+/**
+ * @author Bleuer Rémy
+ * @author Changanaqui Yoann
+ * @author Duruz Florian
+ */
 public class Chess
 {
   public static void main(String ... args) {

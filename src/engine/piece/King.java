@@ -7,9 +7,7 @@ import engine.Board;
 import engine.Move;
 import engine.Position;
 
-import java.util.HashSet;
-
-public class King extends MovableOncePiece {
+public class King extends FirstMovePiece {
 
     public King(PlayerColor color, Position pos) {
         super(color, pos);
@@ -23,71 +21,77 @@ public class King extends MovableOncePiece {
         return PieceType.KING;
     }
 
+    /**
+     * Valid move for a king is a move of one square in any direction
+     * It can also castle if the conditions are met
+     */
     @Override
     public boolean isValidMove(Move move, Board board) {
         Position from = move.from(), to = move.to();
-        Move lastMove = board.getLastMove();
 
-        /*
-        // Ne peut pas se mettre en échec tout seul
-        if (isChecked(board, lastMove)) {
-            System.out.println("King is checked.");
-            return false;
-        }
-        */
-        // Roque (petit ou grand)
-        if(isRoquable(move, board)) {
+        // Roque possible
+        if(canCastle(move, board)) {
             return true;
         }
 
-        // Ne peut se déplacer que d'une case
+        // can only move one square
         if (Math.abs(to.x() - from.x()) > 1 || Math.abs(to.y() - from.y()) > 1) {
-            //System.out.println("1 case only for the king."); // Pourquoi on rentre ici même si le roi avance de 1 ?
             return false;
         }
 
         return true;
     }
 
+    /**
+     * Execute the king move
+     * @param move the move to execute
+     * @param board the board to execute the move on
+     * @param view the view to update
+     */
     @Override
-    public void executeMove(Move move, Board board, ChessView view, Move lastMove) {
+    public void executeMove(Move move, Board board, ChessView view) {
 
         // check if castling move
-        if (isRoquable(move, board)) {
+        if (canCastle(move, board)) {
 
             // move king
             board.movePiece(move);
             view.removePiece(move.from().x(), move.from().y());
-            view.putPiece(this.type(), this.color(), move.to().x(), move.to().y());
+            view.putPiece(this.type(), this.color, move.to().x(), move.to().y());
 
             // move rook
             boolean isKingSide = (move.to().x() - move.from().x()) == 2;
 
             if(isKingSide) {
-                // small roque
+                // small castling
                 Move rookMove = new Move(
                         new Position(7, move.from().y()),
                         new Position(5, move.from().y())
                 );
                 board.movePiece(rookMove);
                 view.removePiece(7, move.from().y());
-                view.putPiece(PieceType.ROOK, this.color(), 5, move.from().y());
+                view.putPiece(PieceType.ROOK, this.color, 5, move.from().y());
             } else {
-                // queen side roque
+                // queen side castling
                 Move rookMove = new Move(
                         new Position(0, move.from().y()),
                         new Position(3, move.from().y())
                 );
                 board.movePiece(rookMove);
                 view.removePiece(0, move.from().y());
-                view.putPiece(PieceType.ROOK, this.color(), 3, move.from().y());
+                view.putPiece(PieceType.ROOK, this.color, 3, move.from().y());
             }
         } else {
             // normal king move
-            super.executeMove(move, board, view, lastMove);
+            super.executeMove(move, board, view);
         }
     }
 
+    /**
+     * Get the piece that checks the king
+     * @param board the board to check
+     * @return the piece that checks the king
+     */
     public Piece getCheckerPiece(Board board) {
         Piece piece;
         for(int x = 0; x < 8; x++) {
@@ -101,46 +105,33 @@ public class King extends MovableOncePiece {
         return null;
     }
 
-    //TODO
+    /**
+     * Check if the king is checked
+     * @param board the board to check
+     * @return true if the king is checked, false otherwise
+     */
     public boolean isChecked(Board board) {
 
         return getCheckerPiece(board) != null;
-        /*
-        Piece piece;
-        for(int x = 0; x < 8; x++) {
-            for(int y = 0; y < 8; y++) {
-                piece = board.getPiece(new Position(x,y));
-                if(piece == null || piece.color() == this.color) continue;
-                if(!piece.isValidMove(new Move(piece.pos(), pos), board)) continue;
-                System.out.println(color.name() + " checked by " + piece.type().name());
-                return true;
-            }
-        }
-        return false;
-        */
     }
 
-    // TODO
-    public boolean isRoquable(Move move, Board board) {
+    /**
+     * Check if the king can castle
+     * @param move the move to check
+     * @param board the board to check
+     * @return true if the king can castle, false otherwise
+     */
+    @Override
+    protected boolean canCastle(Move move, Board board) {
         Position from = move.from(), to = move.to();
         boolean small = to.x() - from.x() == 2;
 
-        if (!this.hasMoved() && Math.abs(to.x() - from.x()) == 2 && from.y() == to.y()) {
-            // Petit roque
-            if (small) {
-                Piece rook = board.getPiece(new Position(7, from.y()));
-                System.out.println("Rook: " + rook);
-                if (rook != null && rook instanceof Rook r && !r.hasMoved()) {
-                    return true;
-                }
-            } else { // Grand roque
-                Piece rook = board.getPiece(new Position(0, from.y()));
-                if (rook != null && rook instanceof Rook r && !r.hasMoved()) {
-                    return true;
-                }
+        if (!this.hasMoved && Math.abs(to.x() - from.x()) == 2 && from.y() == to.y()) {
+            Piece rook = small ? board.getPiece(new Position(7, from.y())) : board.getPiece(new Position(0, from.y()));
+            if (rook != null && rook.canCastle(move, board)) {
+                return true;
             }
         }
-
         return false;
     }
 }
