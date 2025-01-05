@@ -69,6 +69,15 @@ de ce projet.
 
 ## 4. Tests
 Nous avons réalisé chaque cas de figure spécifique demandé dans l'énoncé du laboratoire du coup classique bouger un cavalier au coup plus complexe comme le roque ou la prise en passant.
+- roque pendant l'échec
+- en passant au tour d'après
+- déplacement normaux des pièces
+- en passant
+- TODO ajouter des trucs plus sensible/complexe (comme le roque pendant échec)
+- roque
+- échec
+- échec et mat (coup du berger)
+- stalemate (reproduction des 2 liens)
 - https://www.chess.com/forum/view/game-showcase/fastest-stalemate-known-in-chess
 - https://www.chess.com/forum/view/general/stalemate-on-move-12-with-all-the-pieces-on-the-board
 
