@@ -92,16 +92,6 @@ public class ChessGame implements ChessController {
         if(isKingChecked(pieceFrom, move)) {
             view.displayMessage("You can't leave your King in check");
 
-            // check if the game is over
-            if (isCheckMate()) {
-                view.displayMessage("Checkmate! Game over.");
-                return false;
-            }
-            else if (isStaleMate()) {
-                view.displayMessage("Stalemate! Game over.");
-                return false;
-            }
-
             return false;
         }
 
@@ -110,7 +100,15 @@ public class ChessGame implements ChessController {
         //view.displayMessage("It's " + currentPlayerColor + "'s turn");
         String message = "It's " + currentPlayerColor + "'s turn" + (getPlayerKing().isChecked(board) ? " and King is Checked!" : "");
         view.displayMessage(message);
-
+        // check if the game is over
+        if (isCheckMate()) {
+            view.displayMessage("Checkmate! Game over.");
+            return false;
+        }
+        else if (isStaleMate()) {
+            view.displayMessage("Stalemate! Game over.");
+            return false;
+        }
         board.setLastMove(move);
 
         return true;
@@ -299,7 +297,7 @@ public class ChessGame implements ChessController {
 
         Position[] posToCheck = getPositionInBetween(checker.pos(), getPlayerKing().pos());
         for (Position pos : posToCheck) {
-            if(checkAnyAllyPieceValidMove(getPlayerKing().color(), pos)) continue;
+            if(!checkAnyAllyPieceValidMove(getPlayerKing().color(), pos)) continue;
             return false;
         }
         return true;
