@@ -1,5 +1,5 @@
 # Rapport - Échecs
->Auteur: Bleuet Rémy, Changanaqui Yoann & Duruz Florian
+>Auteurs: Bleuer Rémy, Changanaqui Yoann & Duruz Florian
 >
 ## 1. Introduction
 Le but de ce laboratoire est d'implémenter un jeu d'échecs fonctionnel.
@@ -68,16 +68,60 @@ de ce projet.
 - Il y a pat si aucun déplacement permet d'éviter ou d'entrer en échec.
 
 ## 4. Tests
-Nous avons réalisé chaque cas de figure spécifique demandé dans l'énoncé du laboratoire du coup classique bouger un cavalier au coup plus complexe comme le roque ou la prise en passant.
-- roque pendant l'échec
-- en passant au tour d'après
-- déplacement normaux des pièces
-- en passant
-- TODO ajouter des trucs plus sensible/complexe (comme le roque pendant échec)
-- roque
-- échec
-- échec et mat (coup du berger)
-- stalemate (reproduction des 2 liens)
+Nous avons réalisé chaque cas de figure spécifique demandé dans l'énoncé, voici une liste des tests effectués 
+(seulement sur les pièces blancs, mais les pièces noires fonctionnent de la même manière) :
+
+| Scénario de test                                                                                          | Résultat attendu |
+|-----------------------------------------------------------------------------------------------------------|------------------|
+| Pions                                                                                                     |                  |
+| Avancer un pion blanc d'une case en avant lorsque la case est libre (pas encore déplacé)                  | OK               |
+| Avancer un pion blanc de deux cases en avant sur son premier mouvement (les deux cases libres)            | OK               |
+| Avancer le pion blanc en diagonale d'une case avec une pièce noire sur la destination (capture)           | OK               |
+| Avancer le pion blanc en diagonale d'une case sans pièce noire sur la destination (ni en passant)	        | KO               |
+| Prendre en passant un pion noir qui vient de faire un double pas et s’est arrêté à côté de nous	          | OK               |
+| Prise en passant alors que le pion adverse a bougé deux tours avant (plus éligible)                       | 	KO              |
+| Promotion d’un pion blanc qui atteint la 8ᵉ rangée (dame, tour, fou, cavalier)	                           | OK               |
+| Roque                                                                                                     |                  |
+| Roquer (petit roque,chemin vide, pas en échec)	                                                           | OK               |
+| Roquer (grand roque, chemin vide, pas en échec)	                                                          | OK               |
+| Roquer alors que la tour ou le roi ont déjà bougé	                                                        | KO               |
+| Roquer alors que le chemin est bloqué par une pièce	                                                      | KO               |
+| Roquer alors que le roi est en échec	                                                                     | KO               |
+| Roi                                                                                                       |                  |
+| Avancer le roi blanc de deux cases en avant	                                                              | KO               |
+| Avancer le roi blanc d'une case en avant	                                                                 | OK               |
+| Avancer le roi blanc d'une case en diagonale	                                                             | OK               |
+| Avancer le roi sur une case occupée par un adversaire (capture)                                           | OK               |
+| Fou                                                                                                       |                  |
+| Déplacer un fou en diagonale tant que le chemin est libre	                                                | OK               |
+| Déplacer un fou en diagonale si une pièce (alliée ou ennemie) se trouve sur la trajectoire	               | KO               |
+| Déplacer un fou sur une case avec un adversaire (capture)	                                                | OK               |
+| Cavalier                                                                                                  |                  |
+| Déplacer un cavalier en « L » (2 cases dans une direction et 1 dans l’autre)	                             | OK               |
+| Déplacer un cavalier en « L » (1 case dans une direction et 2 dans l’autre)	                              | OK               |
+| Déplacer un cavalier sur une case avec un adversaire (capture)	                                           | OK               |
+| Tour                                                                                                      |                  |
+| Déplacer la tour blanche en ligne droite (horizontalement ou verticalement) sans pièce sur le chemin	     | OK               |
+| Déplacer la tour blanche si une pièce (alliée ou ennemie) bloque la trajectoire                           | 	KO              |
+| Tenter de bouger la tour blanche en diagonale                                                             | 	KO              |
+| Déplacer la tour blanche sur une case avec un adversaire (capture)	                                       | OK               |
+| Dame                                                                                                      |                  |
+| Déplacer la dame blanche en ligne droite (chemin libre)                                                   | 	OK              |
+| Déplacer la dame en diagonale (chemin libre)                                                              | 	OK              |
+| Déplacer la dame avec une pièce (alliée ou ennemie) sur sa trajectoire                                    | 	KO              |
+| Déplacer la dame sur une case avec un adversaire (caputre)                                                | 	OK              |
+| Échec                                                                                                     |                  |
+| Mettre le roi adverse en échec (déplacer une pièce pour qu’elle puisse capturer le roi s’il ne bouge pas) | 	"Check!"        |
+| Déplacer une pièce qui laisserait son propre roi en échec                                                 | 	KO              |
+| Déplacer un pion qui découvre un échec                                                                    | 	KO              |
+| Échec et mat                                                                                              |                  |
+| Roi adverse en échec et aucun déplacement possible du roi qui évite l’échec                               | 	"Checkmate!"    |
+| Aucune pièce alliée ne peut capturer la pièce qui donne l’échec ou bloquer le chemin                      | 	"Checkmate!"    |
+| Déplacer le roi en échec alors qu’il n’a aucune case valide                                               | 	KO              |
+| Pat                                                                                                       |                  |
+| Roi non en échec, mais aucune pièce alliée ne possède de coup légal                                       | 	"Stalemate!"    |
+
+Pour les tests des pats, nous avons utilisé les configurations suivantes :
 - https://www.chess.com/forum/view/game-showcase/fastest-stalemate-known-in-chess
 - https://www.chess.com/forum/view/general/stalemate-on-move-12-with-all-the-pieces-on-the-board
 
