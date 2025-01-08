@@ -791,5 +791,13 @@
         <h>235</h>
       </geometry>
     </componentView>
+    <note color="-2079" content="CI: Maximum de 16 pièces par couleur/joueur">
+      <noteGeometry>
+        <x>470</x>
+        <y>520</y>
+        <w>160</w>
+        <h>45</h>
+      </noteGeometry>
+    </note>
   </umlView>
 </classDiagram>
