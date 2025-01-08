@@ -44,7 +44,7 @@ public class Position {
      * @return true if the position is inside the board, false otherwise
      */
     public boolean isInsideBoard() {
-        return x >= 0 && x < 8 && y >= 0 && y < 8;
+        return x >= 0 && x < Board.BOARD_SIZE && y >= 0 && y < Board.BOARD_SIZE;
     }
 
     /**
