@@ -105,6 +105,7 @@ Nous avons réalisé chaque cas de figure spécifique demandé dans l'énoncé, 
 | Déplacer un fou en diagonale si une pièce (alliée ou ennemie) se trouve sur la trajectoire	               | KO               |
 | Déplacer un fou sur une case avec un adversaire (capture)	                                                | OK               |
 |                                                                                                           |                  |
+|                                                                                                           |                  |
 | Cavalier                                                                                                  |                  |
 | Déplacer un cavalier en « L » sur une case vide (2 cases dans une direction et 1 dans l’autre)	           | OK               |
 | Déplacer un cavalier en « L » sur une case vide (1 case dans une direction et 2 dans l’autre)	            | OK               |
