@@ -131,7 +131,7 @@
       <method isAbstract="false" isStatic="false" name="toString" returnType="String" view="DEFAULT" visibility="PUBLIC"/>
     </entity>
     <entity entityType="CLASS" id="18220" isAbstract="false" name="Board" visibility="PUBLIC">
-      <attribute const="false" defaultValue="" isStatic="false" name="BOARD_SIZE" type="int" visibility="PUBLIC"/>
+      <attribute const="false" defaultValue="" isStatic="true" name="BOARD_SIZE" type="int" visibility="PUBLIC"/>
       <attribute const="false" defaultValue="" isStatic="false" name="board" type="Piece[][]" visibility="PRIVATE"/>
       <attribute const="false" defaultValue="" isStatic="false" name="lastMove" type="Move" visibility="PRIVATE"/>
       <attribute const="false" defaultValue="" isStatic="false" name="whiteKing" type="King" visibility="PRIVATE"/>
