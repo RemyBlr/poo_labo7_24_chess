@@ -90,8 +90,8 @@ public class King extends FirstMovePiece {
      */
     public Piece getCheckerPiece(Board board) {
         Piece piece;
-        for(int x = 0; x < 8; x++) {
-            for(int y = 0; y < 8; y++) {
+        for(int x = 0; x < board.BOARD_SIZE; x++) {
+            for(int y = 0; y < board.BOARD_SIZE; y++) {
                 piece = board.getPiece(new Position(x,y));
                 if(piece == null || piece.color() == this.color) continue;
                 if(!piece.isValidMove(new Move(piece.pos(), pos), board)) continue;

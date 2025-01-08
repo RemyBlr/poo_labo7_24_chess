@@ -4,7 +4,7 @@ import chess.PlayerColor;
 import engine.piece.*;
 
 public class Board {
-    private final int BOARD_SIZE = 8;
+    public final int BOARD_SIZE = 8;
     private Piece[][] board;
     private Move lastMove;
 
