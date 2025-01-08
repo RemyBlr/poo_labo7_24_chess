@@ -132,6 +132,7 @@ Nous avons réalisé chaque cas de figure spécifique demandé dans l'énoncé, 
 | Roi non en échec, mais aucune pièce alliée ne possède de coup légal                                       | 	"Stalemate!"    |
 
 Pour les tests des pats, nous avons utilisé les configurations suivantes :
+
 - https://www.chess.com/forum/view/game-showcase/fastest-stalemate-known-in-chess
 - https://www.chess.com/forum/view/general/stalemate-on-move-12-with-all-the-pieces-on-the-board
 
