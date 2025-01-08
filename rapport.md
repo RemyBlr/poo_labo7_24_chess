@@ -25,6 +25,10 @@ de ce projet.
   - Représente une pièce d'échec avec une couleur (`PlayerColor`) et une position (`Position`).
   - Méthodes communes à toutes les pièces : `isValidMove()`, `executeMove()`.
   - Sous-classes : `Pawn`, `Rook`, `Knight`, `Bishop`, `Queen`, `King`.
+- FirstMovePiece (abstract) :
+  - Super-Classe : `Piece`.
+  - Représente les pièce ayant un movement spécial nécessitant de ne pas avoir bouger.
+  - Sous-classes : `Pawn`, `Rook`, `King`.
 
 ## 3. Gestions des mouvements
 
