@@ -133,8 +133,8 @@ public class ChessGame implements ChessController {
      * Display the board
      */
     public void displayBoard() {
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
+        for (int x = 0; x < Board.BOARD_SIZE; x++) {
+            for (int y = 0; y < Board.BOARD_SIZE; y++) {
                 Piece piece = board.getPiece(new Position(x, y));
                 if (piece != null) {
                     view.putPiece(piece.type(), piece.color(), x, y);
@@ -159,15 +159,15 @@ public class ChessGame implements ChessController {
         if (getPlayerKing().isChecked(board)) return false;
 
         // get over all pieces
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
+        for (int x = 0; x < Board.BOARD_SIZE; x++) {
+            for (int y = 0; y < Board.BOARD_SIZE; y++) {
                 Piece piece = board.getPiece(new Position(x, y));
                 if (piece == null) continue;
                 if (piece.color() != currentPlayerColor) continue;
 
                 // test all possible moves
-                for (int tx = 0; tx < 8; tx++) {
-                    for (int ty = 0; ty < 8; ty++) {
+                for (int tx = 0; tx < Board.BOARD_SIZE; tx++) {
+                    for (int ty = 0; ty < Board.BOARD_SIZE; ty++) {
                         Position toPos = new Position(tx, ty);
                         // hypothetic move
                         Move testMove = new Move(new Position(x, y), toPos);
@@ -326,8 +326,8 @@ public class ChessGame implements ChessController {
      */
     private boolean checkAnyAllyPieceValidMove(PlayerColor allyColor, Position pos) {
         Piece allyPiece;
-        for(int x = 0; x < 8; x++) {
-            for(int y = 0; y < 8; y++) {
+        for(int x = 0; x < Board.BOARD_SIZE; x++) {
+            for(int y = 0; y < Board.BOARD_SIZE; y++) {
                 allyPiece = board.getPiece(new Position(x,y));
                 if(allyPiece == null || allyPiece.color() != allyColor || allyPiece.type() == PieceType.KING) continue;
                 if(!allyPiece.isValidMove(new Move(allyPiece.pos(), pos), board)) continue;
