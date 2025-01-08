@@ -1,6 +1,6 @@
 # Rapport - Échecs
 >Auteurs: Bleuer Rémy, Changanaqui Yoann & Duruz Florian
->
+
 ## 1. Introduction
 Le but de ce laboratoire est d'implémenter un jeu d'échecs fonctionnel.
 Ce rapport résume les choix d'implémentation effectués pour la réalisation
@@ -142,6 +142,7 @@ Pour les tests des pats, nous avons utilisé les configurations suivantes :
 
 ## 5. Conclusion
 L’implémentation utilise une architecture orientée objet, où :
+
 1. `ChessGame` gère le jeu et appelle les méthodes nécessaires,
 2. `Board` pour déplacer/manipuler les pièces, et
 3. Chaque `Piece` gère son déplacement et son exécution spécifique.
