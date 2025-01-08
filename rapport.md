@@ -91,10 +91,10 @@ Nous avons réalisé chaque cas de figure spécifique demandé dans l'énoncé, 
 | Roquer alors que le roi est en échec	                                                                     | KO               |
 |                                                                                                           |                  |
 | Roi                                                                                                       |                  |
-| Avancer le roi blanc de deux cases en avant	                                                              | KO               |
-| Avancer le roi blanc d'une case en avant	                                                                 | OK               |
-| Avancer le roi blanc d'une case en diagonale	                                                             | OK               |
-| Avancer le roi sur une case occupée par un adversaire (capture)                                           | OK               |
+| Avancer le roi blanc de deux cases en avant sur un emplacement vide et sans obstacle                      | KO               |
+| Avancer le roi blanc d'une case en avant	sur un emplacement vide                                          | OK               |
+| Avancer le roi blanc d'une case en diagonale sur un emplacement vide                                      | OK               |
+| Avancer le roi sur une case occupée par une pièce noire (capture)                                         | OK               |
 |                                                                                                           |                  |
 | Fou                                                                                                       |                  |
 | Déplacer un fou en diagonale tant que le chemin est libre	                                                | OK               |
@@ -102,21 +102,21 @@ Nous avons réalisé chaque cas de figure spécifique demandé dans l'énoncé, 
 | Déplacer un fou sur une case avec un adversaire (capture)	                                                | OK               |
 |                                                                                                           |                  |
 | Cavalier                                                                                                  |                  |
-| Déplacer un cavalier en « L » (2 cases dans une direction et 1 dans l’autre)	                             | OK               |
-| Déplacer un cavalier en « L » (1 case dans une direction et 2 dans l’autre)	                              | OK               |
-| Déplacer un cavalier sur une case avec un adversaire (capture)	                                           | OK               |
+| Déplacer un cavalier en « L » sur une case vide (2 cases dans une direction et 1 dans l’autre)	           | OK               |
+| Déplacer un cavalier en « L » sur une case vide (1 case dans une direction et 2 dans l’autre)	            | OK               |
+| Déplacer un cavalier sur une case avec une pièce noire (capture)	                                         | OK               |
 |                                                                                                           |                  |
 | Tour                                                                                                      |                  |
 | Déplacer la tour blanche en ligne droite (horizontalement ou verticalement) sans pièce sur le chemin	     | OK               |
 | Déplacer la tour blanche si une pièce (alliée ou ennemie) bloque la trajectoire                           | 	KO              |
 | Tenter de bouger la tour blanche en diagonale                                                             | 	KO              |
-| Déplacer la tour blanche sur une case avec un adversaire (capture)	                                       | OK               |
+| Déplacer la tour blanche sur une case avec une pièce noire (capture)	                                     | OK               |
 |                                                                                                           |                  |
 | Dame                                                                                                      |                  |
 | Déplacer la dame blanche en ligne droite (chemin libre)                                                   | 	OK              |
 | Déplacer la dame en diagonale (chemin libre)                                                              | 	OK              |
 | Déplacer la dame avec une pièce (alliée ou ennemie) sur sa trajectoire                                    | 	KO              |
-| Déplacer la dame sur une case avec un adversaire (caputre)                                                | 	OK              |
+| Déplacer la dame sur une case avec une pièce noire (caputre)                                              | 	OK              |
 |                                                                                                           |                  |
 | Échec                                                                                                     |                  |
 | Mettre le roi adverse en échec (déplacer une pièce pour qu’elle puisse capturer le roi s’il ne bouge pas) | 	"Check!"        |
