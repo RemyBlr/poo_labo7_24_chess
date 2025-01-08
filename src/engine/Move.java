@@ -25,8 +25,7 @@ public class Move {
     /**
      * @return the move in the opposite direction
      */
-    public Move inverse()
-    {
+    public Move inverse() {
         return new Move(to, from);
     }
 
