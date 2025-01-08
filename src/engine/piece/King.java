@@ -35,11 +35,7 @@ public class King extends FirstMovePiece {
         }
 
         // can only move one square
-        if (Math.abs(to.x() - from.x()) > 1 || Math.abs(to.y() - from.y()) > 1) {
-            return false;
-        }
-
-        return true;
+        return Math.abs(to.x() - from.x()) <= 1 && Math.abs(to.y() - from.y()) <= 1;
     }
 
     /**
